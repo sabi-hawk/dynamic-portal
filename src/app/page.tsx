@@ -1,11 +1,11 @@
-import { Button } from "antd";
+import { Button, Col, Row } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="landing-page">
-      <div className="header">
+    <Row className="landing-page">
+      <Row className="header">
         <div className="logo-wrap">
           <h3>LOGO</h3>
         </div>
@@ -33,8 +33,8 @@ export default function Home() {
             <Link href="/signup">Sign Up</Link>
           </Button>
         </div>
-      </div>
-      <div className="body"></div>
-    </div>
+      </Row>
+      <Row className="body"></Row>
+    </Row>
   );
 }
