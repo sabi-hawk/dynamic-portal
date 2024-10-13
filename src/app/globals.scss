@@ -25,3 +25,25 @@ body {
     text-wrap: balance;
   }
 }
+
+.landing-page {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px;
+    .navigation-links-wrap {
+      ul {
+        display: flex;
+        gap: 15px;
+      }
+    }
+    .btn-wrap {
+      button {
+        span {
+        }
+      }
+    }
+  }
+  .body {
+  }
+}
