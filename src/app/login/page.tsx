@@ -8,11 +8,7 @@ import linkedInIcon from "../../assets/icons/social-linkedin.png";
 import twitterIcon from "../../assets/icons/social-twitter.png";
 import React from "react";
 import Link from "next/link";
-import {
-  EyeInvisibleOutlined,
-  MailOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { EyeInvisibleOutlined, UserOutlined } from "@ant-design/icons";
 interface LoginValues {
   username: string;
   password: string;
