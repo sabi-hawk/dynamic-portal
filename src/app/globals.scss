@@ -25,3 +25,18 @@ body {
     text-wrap: balance;
   }
 }
+
+.img-container-t {
+  height: 100%; /* or any specific height */
+  width: 100%; /* or any specific width */
+  overflow: hidden; /* hides overflow if the image doesn't fit perfectly */
+  display: flex; /* to center the image */
+  justify-content: center; /* horizontally center the image */
+  align-items: center; /* vertically center the image */
+}
+
+.img-container-t img {
+  height: 100%; /* fills the height of the container */
+  width: 100%; /* fills the width of the container */
+  object-fit: cover; /* covers the entire container while maintaining aspect ratio */
+}

@@ -1,3 +1,4 @@
+"use client";
 import { Button, Row } from "antd";
 import Link from "next/link";
 import LandingPageImage1 from "../assets/LandingPageImage1.jpeg";

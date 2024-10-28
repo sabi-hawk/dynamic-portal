@@ -1,7 +1,144 @@
+"use client";
+import { Button, Checkbox, Col, Form, Input, Row } from "antd";
+import Image from "next/image";
+import SignUpPage from "../../assets/images/signup.png";
+import googleIcon from "../../assets/icons/social-google.png";
+import facebookIcon from "../../assets/icons/social-fb.png";
+import linkedInIcon from "../../assets/icons/social-linkedin.png";
+import twitterIcon from "../../assets/icons/social-twitter.png";
 import React from "react";
+import Link from "next/link";
+import {
+  EyeInvisibleOutlined,
+  MailOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+interface LoginValues {
+  username: string;
+  password: string;
+}
 
 function Login() {
-  return <div>Login</div>;
+  const [form] = Form.useForm();
+
+  const handleLogin = async (values: LoginValues) => {
+    console.log(values);
+  };
+
+  const onFinish = (values: LoginValues) => {
+    handleLogin(values);
+  };
+
+  return (
+    <Row className="h-screen">
+      <Col className="flex flex-col justify-center items-center" span={12}>
+        <div className="w-[70%]">
+          <div className="mb-3">
+            <h2 className="text-[26px] font-bold">Welcome to Dynamic Portal</h2>
+            <p className="text-[16px] font-medium">
+              Need an account?
+              <a
+                href="/signup"
+                className="text-custom-blue no-underline hover:underline text-[16px] font-medium text-[#1677ff]"
+              >
+                {" "}
+                Signup
+              </a>
+            </p>
+          </div>
+          <Form
+            form={form}
+            onFinish={onFinish}
+            style={{
+              borderRadius: "0.35rem",
+            }}
+          >
+            <Form.Item
+              name="username"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your username",
+                },
+              ]}
+            >
+              <Input
+                suffix={<UserOutlined />}
+                type="text"
+                placeholder="Username*"
+                className="bg-transparent form-control py-2"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your password",
+                },
+              ]}
+            >
+              <Input.Password
+                suffix={<EyeInvisibleOutlined />}
+                placeholder="Password*"
+                className="bg-transparent form-control py-2"
+              />
+            </Form.Item>
+
+            <div className="flex items-center justify-between m-2">
+              <Form.Item
+                className="m-0"
+                name="remember"
+                valuePropName="checked"
+              >
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+
+              <Link href="/">Forgot Password?</Link>
+            </div>
+            <Link href="/dashboard">
+              <Button
+                className="w-full h-[44px] rounded-[10px] font-roboto font-normal text-lg"
+                type="primary"
+              >
+                Login
+              </Button>
+            </Link>
+          </Form>
+        </div>
+
+        <div className="flex items-center justify-center w-full text-center my-4">
+          <span className="flex-1 border-b w-[50%] border-gray-300 mr-2"></span>
+          <p className="text-[28px] font-medium p-0 px-5"> OR </p>
+          <span className="flex-1 border-b w-[50%] border-gray-300 ml-2"></span>
+        </div>
+        <div className="flex justify-center gap-2.5 mt-2.5">
+          <Button className="w-auto h-auto p-0 border-0">
+            <Image src={googleIcon} alt="Google Icon" />
+          </Button>
+          <Button className="w-auto h-auto p-0 border-0">
+            <Image src={facebookIcon} alt="Facebook Icon" />
+          </Button>
+          <Button className="w-auto h-auto p-0 border-0">
+            <Image src={linkedInIcon} alt="LinkedIn Icon" />
+          </Button>
+          <Button className="w-auto h-auto p-0 border-0">
+            <Image src={twitterIcon} alt="Twitter Icon" />
+          </Button>
+        </div>
+      </Col>
+      <Col className="h-full bg-[#fafcfe]" span={12}>
+        <Image
+          className="h-full object-contain bg-cover"
+          src={SignUpPage}
+          alt="Landing Page"
+          width={845}
+          height={433.2}
+        />
+      </Col>
+    </Row>
+  );
 }
 
 export default Login;
