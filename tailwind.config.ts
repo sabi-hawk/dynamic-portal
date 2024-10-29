@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'custom': '0px 0px 4px 0px rgba(0, 0, 0, 0.2)', // Equivalent to #00000033
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
