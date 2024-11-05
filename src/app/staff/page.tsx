@@ -14,13 +14,14 @@ import {
 interface DataType {
   key: React.Key;
   image: string;
-  rollNumber: number;
   name: string;
   department: string;
   gender: string;
+  role: string;
+  degree: string;
   mobile: string;
   email: string;
-  admissionDate: string;
+  joiningDate: string;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -30,10 +31,6 @@ const columns: TableColumnsType<DataType> = [
     render: (src: string) => (
       <Image src={src} alt="Profile" width={40} height={40} />
     ),
-  },
-  {
-    title: "Roll No.",
-    dataIndex: "rollNumber",
   },
   {
     title: "Name",
@@ -58,17 +55,29 @@ const columns: TableColumnsType<DataType> = [
       </Tag>
     ),
   },
+
+  {
+    title: "Degree",
+    dataIndex: "degree",
+  },
   {
     title: "Mobile",
     dataIndex: "mobile",
+  },
+  {
+    title: "Role",
+    dataIndex: "role",
+    render: (role: string) => (
+      <Tag color={role === "Admin" ? "red" : "cyan"}>{role}</Tag>
+    ),
   },
   {
     title: "Email",
     dataIndex: "email",
   },
   {
-    title: "Admission Date",
-    dataIndex: "admissionDate",
+    title: "Joining Date",
+    dataIndex: "joiningDate",
   },
   {
     title: "Actions",
@@ -105,15 +114,41 @@ const columns: TableColumnsType<DataType> = [
 const data = Array.from({ length: 100 }).map<DataType>((_, i) => ({
   key: i,
   image: "/assets/images/user.png",
-  rollNumber: i+10,
   name: `John ${i % 2 === 0 ? "Brown" : "Smith"}`, // Optional: alternate names
   department: "Science",
   gender: i % 2 === 0 ? "Male" : "Female", // Alternate genders
   degree: "PhD",
   mobile: "123-456-7890",
+  role: i % 2 === 0 ? "Teacher" : "Admin", // Alternate roles
   email: `john${i}@example.com`,
-  admissionDate: "2022-01-10",
+  joiningDate: "2022-01-10",
 }));
+
+
+// const data: DataType[] = [
+//   {
+//     key: "1",
+//     image: "/assets/images/user.png",
+//     name: "John Brown",
+//     department: "Science",
+//     gender: "Male",
+//     degree: "PhD",
+//     mobile: "123-456-7890",
+//     email: "john@example.com",
+//     joiningDate: "2022-01-10",
+//   },
+//   {
+//     key: "2",
+//     image: "/assets/images/user.png",
+//     name: "Jane Smith",
+//     department: "Mathematics",
+//     gender: "Female",
+//     degree: "MSc",
+//     mobile: "098-765-4321",
+//     email: "jane@example.com",
+//     joiningDate: "2023-03-15",
+//   },
+// ];
 
 const handleEdit = (key: React.Key) => {
   console.log("Edit record", key);
@@ -123,14 +158,14 @@ const handleDelete = (key: React.Key) => {
   console.log("Delete record", key);
 };
 
-function Students() {
+function Teachers() {
   return (
     <AdminLayout>
       <div>
         <div className="flex justify-between p-[20px] bg-[#DAE1F3]">
           <div className="flex items-center gap-[10px]">
             <span className="text-[#5B626B] font-roboto text-base font-medium leading-[18.75px] text-center">
-              All Students
+              All Staff
             </span>
             <Input
               className="w-[215px] bg-white rounded-[6px]"
@@ -215,4 +250,4 @@ function Students() {
   );
 }
 
-export default Students;
+export default Teachers;

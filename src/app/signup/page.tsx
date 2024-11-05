@@ -1,11 +1,6 @@
 "use client";
 import { Button, Col, Form, Input, Row } from "antd";
 import Image from "next/image";
-import SignUpPage from "../../assets/images/signup.png";
-import googleIcon from "../../assets/icons/social-google.png";
-import facebookIcon from "../../assets/icons/social-fb.png";
-import linkedInIcon from "../../assets/icons/social-linkedin.png";
-import twitterIcon from "../../assets/icons/social-twitter.png";
 import React from "react";
 import Link from "next/link";
 import {
@@ -34,7 +29,7 @@ function SignUp() {
       <Col className="h-full bg-[#fafcfe]" span={12}>
         <Image
           className="h-full object-contain bg-cover"
-          src={SignUpPage}
+          src="/assets/images/signup.png"
           alt="Landing Page"
           width={845}
           height={433.2}
@@ -135,13 +130,13 @@ function SignUp() {
 
             <p className="text-[16px] font-medium mb-2">
               Already registered?
-              <a
+              <Link
                 href="/login"
                 className="text-custom-blue no-underline hover:underline text-[16px] font-medium text-[#1677ff]"
               >
                 {" "}
                 Login
-              </a>
+              </Link>
             </p>
 
             <Link href="/dashboard">
@@ -162,16 +157,36 @@ function SignUp() {
         </div>
         <div className="flex justify-center gap-2.5 mt-2.5">
           <Button className="w-auto h-auto p-0 border-0">
-            <Image src={googleIcon} alt="Google Icon" />
+            <Image
+              src="/assets/icons/social-google.png"
+              height={50}
+              width={50}
+              alt="Google Icon"
+            />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image src={facebookIcon} alt="Facebook Icon" />
+            <Image
+              src="/assets/icons/social-fb.png"
+              height={50}
+              width={50}
+              alt="Facebook Icon"
+            />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image src={linkedInIcon} alt="LinkedIn Icon" />
+            <Image
+              src="/assets/icons/social-linkedin.png"
+              height={50}
+              width={50}
+              alt="LinkedIn Icon"
+            />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image src={twitterIcon} alt="Twitter Icon" />
+            <Image
+              src="/assets/icons/social-twitter.png"
+              height={50}
+              width={50}
+              alt="Twitter Icon"
+            />
           </Button>
         </div>
       </Col>

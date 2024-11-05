@@ -3,12 +3,6 @@ import { Col, Row, Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import React from "react";
 import Image from "next/image";
-import ArrowUpIcon from "../../assets/icons/arrow-up.png";
-import ArrowDownIcon from "../../assets/icons/arrow-down.png";
-import StudentImage from "../../assets/images/students.png";
-import CoursesImage from "../../assets/images/courses.png";
-import TeachersImage from "../../assets/images/teachers.png";
-import FeeImage from "../../assets/images/fee.png";
 import { Column } from "@ant-design/plots";
 import AdminLayout from "@/components/Layouts/Admin";
 
@@ -204,7 +198,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src={StudentImage} alt="Student Image" />
+              <Image src="/assets/images/students.png" height={64} width={64} alt="Student Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Total Students
@@ -217,7 +211,8 @@ function Dashboard() {
             <div className="flex justify-between items-center">
               <Image
                 className="w-[18.57px] h-[10px]"
-                src={ArrowUpIcon}
+                src="/assets/icons/arrow-up.png"
+                height={21} width={12}
                 alt="Arrow Up Icon"
               />
               <p>10% Higher Then Last Month</p>
@@ -227,7 +222,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src={CoursesImage} alt="Courses Image" />
+              <Image src="/assets/images/courses.png" height={64} width={64} alt="Courses Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Total Courses
@@ -240,7 +235,8 @@ function Dashboard() {
             <div className="flex justify-between items-center">
               <Image
                 className="w-[18.57px] h-[10px]"
-                src={ArrowDownIcon}
+                src="/assets/icons/arrow-down.png"
+                height={21} width={12}
                 alt="Arrow Down Icon"
               />
               <p>0.7% less than last year</p>
@@ -250,7 +246,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src={TeachersImage} alt="Teachers Image" />
+              <Image src="/assets/images/teachers.png" height={64} width={64} alt="Teachers Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Total Teachers
@@ -263,7 +259,8 @@ function Dashboard() {
             <div className="flex justify-between items-center">
               <Image
                 className="w-[18.57px] h-[10px]"
-                src={ArrowUpIcon}
+                src="/assets/icons/arrow-up.png"
+                height={21} width={12}
                 alt="Arrow Up Icon"
               />
               <p>10% Higher Then Last Month</p>
@@ -273,7 +270,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src={FeeImage} alt="Fee Image" />
+              <Image src="/assets/images/fee.png" height={64} width={64} alt="Fee Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Fee Collected
@@ -286,7 +283,8 @@ function Dashboard() {
             <div className="flex justify-between items-center">
               <Image
                 className="w-[18.57px] h-[10px]"
-                src={ArrowUpIcon}
+                src="/assets/icons/arrow-up.png"
+                height={21} width={12}
                 alt="Arrow Up Icon"
               />
               <p>10% Higher Then Last Month</p>

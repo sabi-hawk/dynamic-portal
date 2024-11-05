@@ -29,9 +29,12 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="btn-wrap">
+        <div className="flex gap-[10px]">
           <Button>
-            <Link href="/signup">Sign Up</Link>
+            <Link href="/signup">Create Account</Link>
+          </Button>
+          <Button>
+            <Link href="/login">Login</Link>
           </Button>
         </div>
       </Row>

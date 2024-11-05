@@ -4,12 +4,6 @@ import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import DashboardIcon from "../../../assets/icons/dashboard.png";
-import AdminIcon from "../../../assets/icons/users.png";
-import TeacherIcon from "../../../assets/icons/teachers.png";
-import StudentIcon from "../../../assets/icons/students.png";
-import CoursesIcon from "../../../assets/icons/courses.png";
-import SettingsIcon from "../../../assets/icons/settings.png";
 import UserImage from "../../../assets/images/user.png";
 import type { MenuProps } from "antd";
 import Link from "next/link";
@@ -26,36 +20,36 @@ const items: MenuItem[] = [
     icon: (
       <Image
         className="w-[13px] h-[13px]"
-        src={DashboardIcon}
+        height={13}
+        width={13}
+        src="/assets/icons/dashboard.png"
         alt="Dashboard Icon"
       />
     ),
     label: <Link href="/dashboard">Dashboard</Link>,
   },
   {
-    key: "admins",
-    icon: (
-      <Image className="w-[13px] h-[13px]" src={AdminIcon} alt="Admin Icon" />
-    ),
-    label: <Link href="/admins">Admins</Link>,
-  },
-  {
-    key: "teachers",
+    key: "staff",
     icon: (
       <Image
         className="w-[13px] h-[13px]"
-        src={TeacherIcon}
-        alt="Teacher Icon"
+        height={13}
+        width={13}
+        src="/assets/icons/teachers.png"
+        alt="Staff Icon"
       />
     ),
-    label: <Link href="/teachers">Teachers</Link>,
+    label: <Link href="/staff">Staff</Link>,
   },
   {
     key: "students",
     icon: (
       <Image
         className="w-[13px] h-[13px]"
-        src={StudentIcon}
+        height={13}
+        width={13}
+        src="/assets/icons/students.png"
+        
         alt="Student Icon"
       />
     ),
@@ -66,7 +60,9 @@ const items: MenuItem[] = [
     icon: (
       <Image
         className="w-[11.24px] h-[13px]"
-        src={CoursesIcon}
+        height={13}
+        width={13}
+        src="/assets/icons/courses.png"
         alt="Courses Icon"
       />
     ),
@@ -77,12 +73,14 @@ const items: MenuItem[] = [
     icon: (
       <Image
         className="w-[13px] h-[13px]"
-        src={SettingsIcon}
+        height={13}
+        width={13}
+        src="/assets/icons/settings.png"
         alt="Settings Icon"
       />
     ),
     label: <Link href="/settings">Settings</Link>,
-  }
+  },
 ];
 
 function AdminLayout({ children }: LayoutProps) {
