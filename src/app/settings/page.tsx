@@ -2,6 +2,9 @@
 import React from "react";
 import AdminLayout from "@/components/Layouts/Admin";
 import { Row, Tabs } from "antd";
+import GeneralSettings from "@/components/Forms/Settings/General";
+import PortalSettings from "@/components/Forms/Settings/Portal";
+import "./index.scss"
 
 const onChange = (key: string) => {
   console.log(key);
@@ -15,8 +18,9 @@ function Settings() {
           Settings
         </span>
       </div>
-      <Row className="bg-white py-[10px] px-[60px]">
+      <Row className="settings-page bg-white py-[10px] px-[60px]">
         <Tabs
+          className="w-full"
           onChange={onChange}
           type="card"
           size="large"
@@ -24,12 +28,12 @@ function Settings() {
             {
               label: `General`,
               key: "1",
-              children: `Content of Tab Pane ${1}`,
+              children: <GeneralSettings />,
             },
             {
               label: `Portal`,
               key: "2",
-              children: `Content of Tab Pane ${2}`,
+              children: <PortalSettings />,
             },
           ]}
         />
