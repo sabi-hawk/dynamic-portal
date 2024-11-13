@@ -4,7 +4,6 @@ import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import UserImage from "../../../assets/images/user.png";
 import type { MenuProps } from "antd";
 import Link from "next/link";
 
@@ -22,7 +21,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/dashboard.png"
+        src="/assets/icons/dashboard.svg"
         alt="Dashboard Icon"
       />
     ),
@@ -35,7 +34,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/teachers.png"
+        src="/assets/icons/teachers.svg"
         alt="Staff Icon"
       />
     ),
@@ -48,7 +47,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/students.png"
+        src="/assets/icons/students.svg"
         
         alt="Student Icon"
       />
@@ -62,7 +61,7 @@ const items: MenuItem[] = [
         className="w-[11.24px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/courses.png"
+        src="/assets/icons/courses.svg"
         alt="Courses Icon"
       />
     ),
@@ -75,7 +74,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/settings.png"
+        src="/assets/icons/settings.svg"
         alt="Settings Icon"
       />
     ),
@@ -115,8 +114,10 @@ function AdminLayout({ children }: LayoutProps) {
             <div className="flex flex-col items-center gap-[7px]">
               <Image
                 className="w-[75px] h-[75px] gap-0 rounded-tl-[5px] border-t border-opacity-0 border border-[var(--white)]"
-                src={UserImage}
+                src="/assets/images/user.png"
                 alt="User Image"
+                width={75}
+                height={75}
               />
               <span className="font-roboto text-sm font-normal leading-4 text-center">
                 Username
