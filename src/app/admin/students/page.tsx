@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import AdminLayout from "@/components/Layouts/Admin";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import Image from "next/image";
@@ -14,27 +13,35 @@ import {
 interface DataType {
   key: React.Key;
   image: string;
+  rollNumber: number;
   name: string;
   department: string;
   gender: string;
-  role: string;
-  degree: string;
   mobile: string;
   email: string;
-  joiningDate: string;
+  admissionDate: string;
 }
 
 const columns: TableColumnsType<DataType> = [
   {
-    title: "Image",
-    dataIndex: "image",
-    render: (src: string) => (
-      <Image src={src} alt="Profile" width={40} height={40} />
-    ),
+    title: "Roll No.",
+    dataIndex: "rollNumber",
   },
   {
     title: "Name",
     dataIndex: "name",
+    render: (_, record) => (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Image
+          src={record.image}
+          alt="Profile"
+          width={40}
+          height={40}
+          style={{ borderRadius: "50%", marginRight: "8px" }}
+        />
+        <span>{record.name}</span>
+      </div>
+    ),
   },
   {
     title: "Department",
@@ -55,29 +62,17 @@ const columns: TableColumnsType<DataType> = [
       </Tag>
     ),
   },
-
-  {
-    title: "Degree",
-    dataIndex: "degree",
-  },
   {
     title: "Mobile",
     dataIndex: "mobile",
-  },
-  {
-    title: "Role",
-    dataIndex: "role",
-    render: (role: string) => (
-      <Tag color={role === "Admin" ? "red" : "cyan"}>{role}</Tag>
-    ),
   },
   {
     title: "Email",
     dataIndex: "email",
   },
   {
-    title: "Joining Date",
-    dataIndex: "joiningDate",
+    title: "Admission Date",
+    dataIndex: "admissionDate",
   },
   {
     title: "Actions",
@@ -114,41 +109,15 @@ const columns: TableColumnsType<DataType> = [
 const data = Array.from({ length: 100 }).map<DataType>((_, i) => ({
   key: i,
   image: "/assets/images/user.png",
+  rollNumber: i+10,
   name: `John ${i % 2 === 0 ? "Brown" : "Smith"}`, // Optional: alternate names
   department: "Science",
   gender: i % 2 === 0 ? "Male" : "Female", // Alternate genders
   degree: "PhD",
   mobile: "123-456-7890",
-  role: i % 2 === 0 ? "Teacher" : "Admin", // Alternate roles
   email: `john${i}@example.com`,
-  joiningDate: "2022-01-10",
+  admissionDate: "2022-01-10",
 }));
-
-
-// const data: DataType[] = [
-//   {
-//     key: "1",
-//     image: "/assets/images/user.png",
-//     name: "John Brown",
-//     department: "Science",
-//     gender: "Male",
-//     degree: "PhD",
-//     mobile: "123-456-7890",
-//     email: "john@example.com",
-//     joiningDate: "2022-01-10",
-//   },
-//   {
-//     key: "2",
-//     image: "/assets/images/user.png",
-//     name: "Jane Smith",
-//     department: "Mathematics",
-//     gender: "Female",
-//     degree: "MSc",
-//     mobile: "098-765-4321",
-//     email: "jane@example.com",
-//     joiningDate: "2023-03-15",
-//   },
-// ];
 
 const handleEdit = (key: React.Key) => {
   console.log("Edit record", key);
@@ -158,14 +127,14 @@ const handleDelete = (key: React.Key) => {
   console.log("Delete record", key);
 };
 
-function Teachers() {
+function Students() {
   return (
-    <AdminLayout>
+    <div>
       <div>
         <div className="flex justify-between p-[20px] bg-[#DAE1F3]">
           <div className="flex items-center gap-[10px]">
             <span className="text-[#5B626B] font-roboto text-base font-medium leading-[18.75px] text-center">
-              All Staff
+              All Students
             </span>
             <Input
               className="w-[215px] bg-white rounded-[6px]"
@@ -246,8 +215,8 @@ function Teachers() {
           }}
         />
       </div>
-    </AdminLayout>
+    </div>
   );
 }
 
-export default Teachers;
+export default Students;

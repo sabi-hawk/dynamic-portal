@@ -4,7 +4,6 @@ import type { TableProps } from "antd";
 import React from "react";
 import Image from "next/image";
 import { Column } from "@ant-design/plots";
-import AdminLayout from "@/components/Layouts/Admin";
 
 interface DataType {
   key: string;
@@ -193,7 +192,7 @@ function Dashboard() {
   };
 
   return (
-    <AdminLayout>
+    <div className="flex flex-col gap-4">
       <Row gutter={16}>
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
@@ -292,8 +291,7 @@ function Dashboard() {
           </div>
         </Col>
       </Row>
-      {/* Charts */}
-      <Row className="mb-4" gutter={16}>
+      <Row gutter={16}>
         <Col span={12}>
           <Row className="flex flex-col bg-white p-5 rounded-lg">
             <h3 className="font-roboto text-[17px] font-medium leading-[19.92px]">
@@ -311,7 +309,6 @@ function Dashboard() {
           </Row>
         </Col>
       </Row>
-      {/* Grids */}
       <Row gutter={16}>
         <Col span={12}>
           <Row className="flex flex-col bg-white p-5 rounded-lg">
@@ -330,7 +327,7 @@ function Dashboard() {
           </Row>
         </Col>
       </Row>
-    </AdminLayout>
+    </div>
   );
 }
 

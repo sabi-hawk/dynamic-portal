@@ -239,7 +239,7 @@ export default function Home() {
             </div>
           </div>
         </Row>
-        <Row>
+        <Row className="w-full">
           <div className="bg-[#212B36] text-white w-4/5 flex justify-center mx-auto p-10">
             <p className="font-inter text-sm font-medium leading-[14px] text-left">
               Copyright © 2024 NAME

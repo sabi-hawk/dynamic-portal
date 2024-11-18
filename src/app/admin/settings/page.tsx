@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import AdminLayout from "@/components/Layouts/Admin";
 import { Row, Tabs } from "antd";
 import GeneralSettings from "@/components/Forms/Settings/General";
 import PortalSettings from "@/components/Forms/Settings/Portal";
@@ -12,7 +11,7 @@ const onChange = (key: string) => {
 
 function Settings() {
   return (
-    <AdminLayout>
+    <div>
       <div className="p-[20px] bg-white">
         <span className="font-roboto text-base font-medium leading-[18.75px] text-center text-[#5B626B]">
           Settings
@@ -38,7 +37,7 @@ function Settings() {
           ]}
         />
       </Row>
-    </AdminLayout>
+    </div>
   );
 }
 

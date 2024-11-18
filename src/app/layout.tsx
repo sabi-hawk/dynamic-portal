@@ -1,12 +1,13 @@
 // import type { Metadata } from "next";
 // import localFont from "next/font/local";
+import Layout from "@/components/Layouts/index";
 import "./globals.scss";
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const role = "teacher";
   return (
     <html lang="en">
       <head>
@@ -18,7 +19,9 @@ export default function RootLayout({
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Layout role={role}>
+          {children}
+        </Layout>
       </body>
     </html>
   );

@@ -1,5 +1,4 @@
 import React from "react";
-import AdminLayout from "@/components/Layouts/Admin";
 import { Button, Col, Row } from "antd";
 import Image from "next/image";
 
@@ -26,7 +25,7 @@ function Courses() {
   }));
 
   return (
-    <AdminLayout>
+    <div>
       <div className="p-[20px] bg-white">
         <span className="font-roboto text-base font-medium leading-[18.75px] text-center text-[#5B626B]">
           All Courses
@@ -73,7 +72,7 @@ function Courses() {
           </Col>
         ))}
       </Row>
-    </AdminLayout>
+    </div>
   );
 }
 

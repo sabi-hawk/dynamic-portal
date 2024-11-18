@@ -3,7 +3,11 @@ import { Col, Row, Button, Menu } from "antd";
 import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import {
+  DollarOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import Link from "next/link";
 
@@ -25,20 +29,20 @@ const items: MenuItem[] = [
         alt="Dashboard Icon"
       />
     ),
-    label: <Link href="/dashboard">Dashboard</Link>,
+    label: <Link href="/admin/dashboard">Dashboard</Link>,
   },
   {
-    key: "staff",
+    key: "teachers",
     icon: (
       <Image
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
         src="/assets/icons/teachers.svg"
-        alt="Staff Icon"
+        alt="teachers Icon"
       />
     ),
-    label: <Link href="/staff">Staff</Link>,
+    label: <Link href="/admin/teachers">Teachers</Link>,
   },
   {
     key: "students",
@@ -48,11 +52,10 @@ const items: MenuItem[] = [
         height={13}
         width={13}
         src="/assets/icons/students.svg"
-        
         alt="Student Icon"
       />
     ),
-    label: <Link href="/students">Students</Link>,
+    label: <Link href="/admin/students">Students</Link>,
   },
   {
     key: "courses",
@@ -65,7 +68,38 @@ const items: MenuItem[] = [
         alt="Courses Icon"
       />
     ),
-    label: <Link href="/courses">Courses</Link>,
+    label: <Link href="/admin/courses">Courses</Link>,
+  },
+  {
+    key: "staff",
+    icon: (
+      <Image
+        className="w-[13px] h-[13px]"
+        height={13}
+        width={13}
+        src="/assets/icons/teachers.svg"
+        alt="staff Icon"
+      />
+    ),
+    label: <Link href="/admin/staff">Staff</Link>,
+  },
+  {
+    key: "cash-flows",
+    icon: <DollarOutlined />,
+    label: <Link href="/admin/cash-flows">Cash Flows</Link>,
+  },
+  {
+    key: "attendance",
+    icon: (
+      <Image
+        className="w-[13px] h-[13px]"
+        height={13}
+        width={13}
+        src="/assets/icons/teachers.svg"
+        alt="attendance Icon"
+      />
+    ),
+    label: <Link href="/admin/attendance">Attendance</Link>,
   },
   {
     key: "settings",
@@ -78,7 +112,7 @@ const items: MenuItem[] = [
         alt="Settings Icon"
       />
     ),
-    label: <Link href="/settings">Settings</Link>,
+    label: <Link href="/admin/settings">Settings</Link>,
   },
 ];
 
@@ -90,9 +124,9 @@ function AdminLayout({ children }: LayoutProps) {
   useEffect(() => {
     // Check for window to ensure this runs only on the client side
     if (typeof window !== "undefined") {
-      const currentPath = pathname.replace("/", ""); // Remove leading slash to match keys
+      const currentPath = pathname.split("/").pop();
       const foundItem = items.find((item) => item?.key === currentPath); // Find item by key
-      const key = foundItem?.key || "dashboard"; 
+      const key = foundItem?.key || "dashboard";
       setSelectedKey(key as string);
     }
   }, [pathname]);
@@ -131,8 +165,8 @@ function AdminLayout({ children }: LayoutProps) {
         {/* Menu */}
         <div className="mt-[30px]">
           <Menu
-            style={{ border: "0 !important" }}
-            className="w-full"
+            // style={{ border: "0 !important" }}
+            className="w-full border-0"
             selectedKeys={[selectedKey]}
             defaultOpenKeys={["sub1"]}
             mode="inline"
