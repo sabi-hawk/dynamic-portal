@@ -2,12 +2,13 @@
 // import localFont from "next/font/local";
 import Layout from "@/components/Layouts/index";
 import "./globals.scss";
+import { MessageProvider } from "@/utils";
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const role = "teacher";
+  const role = "";
   return (
     <html lang="en">
       <head>
@@ -19,9 +20,9 @@ export default function RootLayout({
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Layout role={role}>
-          {children}
-        </Layout>
+        <MessageProvider>
+          <Layout role={role}>{children}</Layout>
+        </MessageProvider>
       </body>
     </html>
   );

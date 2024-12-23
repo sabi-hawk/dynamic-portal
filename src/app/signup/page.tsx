@@ -8,6 +8,8 @@ import {
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { register } from "@/api/auth";
+import { useMessageApi } from "@/utils";
 interface SignUpValues {
   username: string;
   email: string;
@@ -16,9 +18,16 @@ interface SignUpValues {
 
 function SignUp() {
   const [form] = Form.useForm();
+  const messageApi = useMessageApi();
 
   const handleSignUp = async (values: SignUpValues) => {
-    console.log(values);
+    try {
+      // const { status, data } = await register(values);
+      messageApi.success("Success");
+    } catch (error) {
+      console.log(values);
+      messageApi.error(error);
+    }
   };
 
   const onFinish = (values: SignUpValues) => {
@@ -139,14 +148,13 @@ function SignUp() {
               </Link>
             </p>
 
-            <Link href="/dashboard">
-              <Button
-                className="w-full h-[44px] rounded-[10px] font-roboto font-normal text-lg"
-                type="primary"
-              >
-                Register
-              </Button>
-            </Link>
+            <Button
+              className="w-full h-[44px] rounded-[10px] font-roboto font-normal text-lg"
+              type="primary"
+              htmlType="submit"
+            >
+              Register
+            </Button>
           </Form>
         </div>
 
