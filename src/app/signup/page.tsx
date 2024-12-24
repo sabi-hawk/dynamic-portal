@@ -22,11 +22,22 @@ function SignUp() {
 
   const handleSignUp = async (values: SignUpValues) => {
     try {
-      // const { status, data } = await register(values);
-      messageApi.success("Success");
-    } catch (error) {
-      console.log(values);
-      messageApi.error(error);
+      // Simulate API call (replace with your actual API call)
+      const { status, data } = await register(values);
+
+      if (status === 201) {
+        messageApi.success(data.message);
+        // Optionally redirect to another page or clear the form
+        form.resetFields();
+      } else {
+        throw new Error(data.message || "Signup failed");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        messageApi.error(error.message);
+      } else {
+        messageApi.error("An unexpected error occurred.");
+      }
     }
   };
 

@@ -4,16 +4,36 @@ import { Button, Checkbox, Col, Form, Input, Row } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeInvisibleOutlined, UserOutlined } from "@ant-design/icons";
+import { login } from "@/api/auth";
+import { useMessageApi } from "@/utils";
 interface LoginValues {
-  username: string;
+  email: string;
   password: string;
 }
 
 function Login() {
   const [form] = Form.useForm();
+  const messageApi = useMessageApi();
 
   const handleLogin = async (values: LoginValues) => {
-    console.log(values);
+    try {
+      // Simulate API call (replace with your actual API call)
+      const { status, data } = await login(values);
+
+      if (status === 201) {
+        messageApi.success(data.message);
+        // Optionally redirect to another page or clear the form
+        form.resetFields();
+      } else {
+        throw new Error(data.message || "Signup failed");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        messageApi.error(error.message);
+      } else {
+        messageApi.error("An unexpected error occurred.");
+      }
+    }
   };
 
   const onFinish = (values: LoginValues) => {
