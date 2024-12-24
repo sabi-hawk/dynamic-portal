@@ -1,5 +1,6 @@
-import { Schema, model, InferSchemaType } from "mongoose";
+import { Schema, model, InferSchemaType, Document } from "mongoose";
 
+// Define your schema
 const UserSchema = new Schema({
   name: {
     first: { type: String, trim: true },
@@ -17,8 +18,10 @@ const UserSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export type UserType = InferSchemaType<typeof UserSchema>;
+// Infer the type and extend with Document
+export type UserType = InferSchemaType<typeof UserSchema> & Document;
 
+// Create the model
 const User = model<UserType>("user", UserSchema);
 
 export default User;
