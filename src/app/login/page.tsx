@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Checkbox, Col, Form, Input, Row } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeInvisibleOutlined, UserOutlined } from "@ant-design/icons";
 import { login } from "@/api/auth";
 import { useMessageApi } from "@/utils";
+import { AxiosError } from "axios";
 interface LoginValues {
   email: string;
   password: string;
@@ -14,21 +15,27 @@ interface LoginValues {
 function Login() {
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
+  const [user, setUser] = useState();
 
   const handleLogin = async (values: LoginValues) => {
     try {
       // Simulate API call (replace with your actual API call)
       const { status, data } = await login(values);
 
-      if (status === 201) {
+      if (status === 200) {
         messageApi.success(data.message);
-        // Optionally redirect to another page or clear the form
         form.resetFields();
+        setUser(data);
+        console.log(user);
       } else {
-        throw new Error(data.message || "Signup failed");
+        throw new Error(data.message || "Login failed");
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
+        // Handle AxiosError and access the response object
+        messageApi.error(error.response?.data?.message || error.message);
+      } else if (error instanceof Error) {
+        // Handle general error
         messageApi.error(error.message);
       } else {
         messageApi.error("An unexpected error occurred.");
@@ -65,18 +72,18 @@ function Login() {
             }}
           >
             <Form.Item
-              name="username"
+              name="email"
               rules={[
                 {
                   required: true,
-                  message: "Please enter your username",
+                  message: "Please enter your email",
                 },
               ]}
             >
               <Input
                 suffix={<UserOutlined />}
                 type="text"
-                placeholder="Username*"
+                placeholder="Email*"
                 className="bg-transparent form-control py-2"
               />
             </Form.Item>
@@ -108,14 +115,13 @@ function Login() {
 
               <Link href="/">Forgot Password?</Link>
             </div>
-            <Link href="/dashboard">
-              <Button
-                className="w-full h-[44px] rounded-[10px] font-roboto font-normal text-lg"
-                type="primary"
-              >
-                Login
-              </Button>
-            </Link>
+            <Button
+              className="w-full h-[44px] rounded-[10px] font-roboto font-normal text-lg"
+              type="primary"
+              htmlType="submit"
+            >
+              Login
+            </Button>
           </Form>
         </div>
 

@@ -52,6 +52,7 @@ export function httpMethod(method: HttpMethod): HttpMethod {
         ...error.data,
         message: error.message,
         stack: __DEBUG__ ? error.stack : undefined,
+        error: e
       });
     }
   };

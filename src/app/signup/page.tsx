@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { register } from "@/api/auth";
 import { useMessageApi } from "@/utils";
+import { AxiosError } from "axios";
 interface SignUpValues {
   username: string;
   email: string;
@@ -33,7 +34,11 @@ function SignUp() {
         throw new Error(data.message || "Signup failed");
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
+        // Handle AxiosError and access the response object
+        messageApi.error(error.response?.data?.message || error.message);
+      } else if (error instanceof Error) {
+        // Handle general error
         messageApi.error(error.message);
       } else {
         messageApi.error("An unexpected error occurred.");
