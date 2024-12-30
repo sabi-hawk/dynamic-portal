@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { Row, Tabs } from "antd";
-import GeneralSettings from "@/components/Forms/Settings/General";
-import PortalSettings from "@/components/Forms/Settings/Portal";
+import GeneralSettings from "components/Forms/Settings/General";
+import PortalSettings from "components/Forms/Settings/Portal";
 import "./index.scss"
 
 const onChange = (key: string) => {

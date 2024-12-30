@@ -1,7 +1,5 @@
 "use client";
 import { Button, Row } from "antd";
-import Link from "next/link";
-import Image from "next/image";
 export default function Home() {
   return (
     <Row className="landing-page">
@@ -12,28 +10,28 @@ export default function Home() {
         <div className="navigation-links-wrap">
           <ul className="flex gap-[36px] pt-[25px] pb-[25px]  font-semibold text-[14px] ">
             <li>
-              <Link href="">Home</Link>
+              <a href="">Home</a>
             </li>
             <li>
-              <Link href="">Demos</Link>
+              <a href="">Demos</a>
             </li>
             <li>
-              <Link href="">Customize</Link>
+              <a href="">Customize</a>
             </li>
             <li>
-              <Link href="">Features</Link>
+              <a href="">Features</a>
             </li>
             <li>
-              <Link href="">Contact Us</Link>
+              <a href="">Contact Us</a>
             </li>
           </ul>
         </div>
         <div className="flex gap-[10px]">
           <Button>
-            <Link href="/signup">Create Account</Link>
+            <a href="/signup">Create Account</a>
           </Button>
           <Button>
-            <Link href="/login">Login</Link>
+            <a href="/login">Login</a>
           </Button>
         </div>
       </Row>
@@ -51,7 +49,7 @@ export default function Home() {
             Learn More
           </Button>
           <Row className="mt-[20px]">
-            <Image
+            <img
               src="/assets/images/demo.png"
               alt="Landing Page"
               width={845}
@@ -73,7 +71,7 @@ export default function Home() {
         </Row>
         <Row className="justify-between w-full px-[150px] py-[10px]">
           <div className="w-[300px] h-[300px] px-[56px] pt-[50px] pb-[70px] pl-[64px] rounded-[150px] bg-[#D5E2F5] shadow-[0px_4px_8px_-2px_#3056D366]">
-            <Image
+            <img
               src="/assets/images/university.svg"
               alt="Landing Page"
               width={180}
@@ -81,7 +79,7 @@ export default function Home() {
             />
           </div>
           <div className="w-[300px] h-[300px] px-[56px] pt-[50px] pb-[70px] pl-[64px] rounded-[150px] bg-[#D5E2F5] shadow-[0px_4px_8px_-2px_#3056D366]">
-            <Image
+            <img
               src="/assets/images/college.svg"
               alt="Landing Page"
               width={180}
@@ -89,7 +87,7 @@ export default function Home() {
             />
           </div>
           <div className="w-[300px] h-[300px] px-[56px] pt-[50px] pb-[70px] pl-[64px] rounded-[150px] bg-[#D5E2F5] shadow-[0px_4px_8px_-2px_#3056D366]">
-            <Image
+            <img
               src="/assets/images/school.svg"
               alt="Landing Page"
               width={180}
@@ -107,7 +105,7 @@ export default function Home() {
               Fantastic Live Customizer Will allow you to create the most unique
               and incredible style for your app in only a few seconds!
             </p>
-            <Image
+            <img
               src="/assets/images/video-cover.png"
               alt="Video Cover"
               width={596}
@@ -126,7 +124,7 @@ export default function Home() {
           </p>
           <div className="flex justify-between w-full px-[60px] py-[10px]">
             <div className="border border-[#FC573B] w-[306px] h-[208px] pt-[20px] gap-[40px] rounded-[6px] flex flex-col items-center justify-center">
-              <Image
+              <img
                 src="/assets/icons/no-code.svg"
                 alt="no code"
                 width={80}
@@ -137,7 +135,7 @@ export default function Home() {
               </h2>
             </div>
             <div className="border border-[#D5E2F5] w-[306px] h-[208px] pt-[20px] gap-[40px] rounded-[6px] flex flex-col items-center justify-center">
-              <Image
+              <img
                 src="/assets/icons/customizable.svg"
                 alt="no code"
                 width={80}
@@ -148,7 +146,7 @@ export default function Home() {
               </h2>
             </div>
             <div className="border border-[#D5E2F5] w-[306px] h-[208px] pt-[20px] gap-[40px] rounded-[6px] flex flex-col items-center justify-center">
-              <Image
+              <img
                 src="/assets/icons/integration.svg"
                 alt="no code"
                 width={80}
@@ -159,7 +157,7 @@ export default function Home() {
               </h2>
             </div>
             <div className="border border-[#D5E2F5] w-[306px] h-[208px] pt-[20px] gap-[40px] rounded-[6px] flex flex-col items-center justify-center">
-              <Image
+              <img
                 src="/assets/icons/roles.svg"
                 alt="no code"
                 width={80}
@@ -181,7 +179,7 @@ export default function Home() {
           </p>
           <div className="flex justify-between w-full px-[60px] py-[10px]">
             <div className="border border-[#D5E2F5] w-[412px] h-[129px] p-[25px] gap-[40px] rounded-[6px] flex flex-row items-center justify-center bg-[#D5E2F5]">
-              <Image
+              <img
                 src="/assets/icons/mail.svg"
                 alt="no code"
                 width={80}
@@ -200,7 +198,7 @@ export default function Home() {
               </div>
             </div>
             <div className="border border-[#D5E2F5] w-[412px] h-[129px] p-[25px] gap-[40px] rounded-[6px] flex flex-row items-center justify-center">
-              <Image
+              <img
                 src="/assets/icons/mail.svg"
                 alt="no code"
                 width={80}
@@ -219,7 +217,7 @@ export default function Home() {
               </div>
             </div>
             <div className="border border-[#D5E2F5] w-[412px] h-[129px] p-[25px] gap-[40px] rounded-[6px] flex flex-row items-center justify-center">
-              <Image
+              <img
                 src="/assets/icons/mail.svg"
                 alt="no code"
                 width={80}

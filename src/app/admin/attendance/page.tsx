@@ -2,7 +2,6 @@
 import React from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
-import Image from "next/image";
 import {
   DownloadOutlined,
   ReloadOutlined,
@@ -37,7 +36,7 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: "name",
     render: (_, record) => (
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Image
+        <img
           src={record.image}
           alt="Profile"
           width={40}
@@ -101,7 +100,7 @@ const columns: TableColumnsType<DataType> = [
           className="w-auto h-auto p-0 border-0"
           onClick={() => handleEdit(record.key)}
         >
-          <Image
+          <img
             src="/assets/icons/edit.png"
             alt="Edit Icon"
             width={20}
@@ -112,7 +111,7 @@ const columns: TableColumnsType<DataType> = [
           className="w-auto h-auto p-0 border-0"
           onClick={() => handleDelete(record.key)}
         >
-          <Image
+          <img
             src="/assets/icons/delete.png"
             alt="Delete Icon"
             width={20}
@@ -148,7 +147,7 @@ const handleDelete = (key: React.Key) => {
   console.log("Delete record", key);
 };
 
-function Staff() {
+function Attendance() {
   return (
     <div>
       <div className="flex justify-between p-[20px] bg-[#DAE1F3]">
@@ -238,4 +237,4 @@ function Staff() {
   );
 }
 
-export default Staff;
+export default Attendance;

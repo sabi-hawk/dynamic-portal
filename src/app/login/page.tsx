@@ -1,12 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Checkbox, Col, Form, Input, Row } from "antd";
-import Image from "next/image";
-import Link from "next/link";
 import { EyeInvisibleOutlined, UserOutlined } from "@ant-design/icons";
-import { login } from "@/api/auth";
-import { useMessageApi } from "@/utils";
+import { login } from "api/auth";
+import { useMessageApi } from "utils";
 import { AxiosError } from "axios";
+import { useDispatch } from "react-redux";
+import { setUser, setLoading } from "flux/reducers/auth";
+import { useNavigate } from "react-router-dom";
+
 interface LoginValues {
   email: string;
   password: string;
@@ -15,20 +17,23 @@ interface LoginValues {
 function Login() {
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
-  const [user, setUser] = useState();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async (values: LoginValues) => {
     try {
       // Simulate API call (replace with your actual API call)
+      dispatch(setLoading(true));
       const { status, data } = await login(values);
+      const { message, ...payload } = data;
 
       if (status === 200) {
-        messageApi.success(data.message);
+        messageApi.success(message);
         form.resetFields();
-        setUser(data);
-        console.log(user);
+        dispatch(setUser(payload));
+        navigate("/admin/dashboard");
       } else {
-        throw new Error(data.message || "Login failed");
+        throw new Error(message || "Login failed");
       }
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -40,6 +45,8 @@ function Login() {
       } else {
         messageApi.error("An unexpected error occurred.");
       }
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -55,13 +62,13 @@ function Login() {
             <h2 className="text-[26px] font-bold">Welcome to Dynamic Portal</h2>
             <p className="text-[16px] font-medium">
               Need an account?
-              <Link
+              <a
                 href="/signup"
                 className="text-custom-blue no-underline hover:underline text-[16px] font-medium text-[#1677ff]"
               >
                 {" "}
                 Signup
-              </Link>
+              </a>
             </p>
           </div>
           <Form
@@ -113,7 +120,7 @@ function Login() {
                 <Checkbox>Remember me</Checkbox>
               </Form.Item>
 
-              <Link href="/">Forgot Password?</Link>
+              <a href="/">Forgot Password?</a>
             </div>
             <Button
               className="w-full h-[44px] rounded-[10px] font-roboto font-normal text-lg"
@@ -132,7 +139,7 @@ function Login() {
         </div>
         <div className="flex justify-center gap-2.5 mt-2.5">
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-google.png"
               height={50}
               width={50}
@@ -140,7 +147,7 @@ function Login() {
             />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-fb.png"
               height={50}
               width={50}
@@ -148,7 +155,7 @@ function Login() {
             />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-linkedin.png"
               height={50}
               width={50}
@@ -156,7 +163,7 @@ function Login() {
             />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-twitter.png"
               height={50}
               width={50}
@@ -166,7 +173,7 @@ function Login() {
         </div>
       </Col>
       <Col className="h-full bg-[#fafcfe]" span={12}>
-        <Image
+        <img
           className="h-full object-contain bg-cover"
           src="/assets/images/signup.png"
           alt="Landing Page"

@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import { Row, Tabs } from "antd";
-import FeeGrid from "@/components/Grids/Fee/page";
-import SalariesGrid from "@/components/Grids/Salaries";
-import ExpensesGrid from "@/components/Grids/Expenses";
+import FeeGrid from "components/Grids/Fee/page";
+import SalariesGrid from "components/Grids/Salaries";
+import ExpensesGrid from "components/Grids/Expenses";
 import "./index.scss"
 
 const onChange = (key: string) => {

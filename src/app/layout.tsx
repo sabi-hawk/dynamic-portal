@@ -1,14 +1,19 @@
+'use client';
 // import type { Metadata } from "next";
 // import localFont from "next/font/local";
-import Layout from "@/components/Layouts/index";
+import Layout from "components/Layouts/index";
 import "./globals.scss";
-import { MessageProvider } from "@/utils";
+import { MessageProvider } from "utils";
+import StateProvider from "providers/StateProvider";
+import { PersistGate } from "redux-persist/integration/react";
+import { persister } from "flux/store";
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const role = "";
   return (
     <html lang="en">
       <head>
@@ -18,11 +23,14 @@ export default function RootLayout({
         />
       </head>
       <body
-      // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MessageProvider>
-          <Layout role={role}>{children}</Layout>
-        </MessageProvider>
+        <StateProvider>
+          <PersistGate loading={<div>Loading...</div>} persistor={persister}>
+            <MessageProvider>
+              <Layout>{children}</Layout>
+            </MessageProvider>
+          </PersistGate>
+        </StateProvider>
       </body>
     </html>
   );

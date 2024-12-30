@@ -1,15 +1,15 @@
 "use client";
 import { Button, Col, Form, Input, Row } from "antd";
-import Image from "next/image";
+// import Image from "next/image";
 import React from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import {
   EyeInvisibleOutlined,
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { register } from "@/api/auth";
-import { useMessageApi } from "@/utils";
+import { register } from "api/auth";
+import { useMessageApi } from "utils";
 import { AxiosError } from "axios";
 interface SignUpValues {
   username: string;
@@ -52,7 +52,7 @@ function SignUp() {
   return (
     <Row className="h-screen">
       <Col className="h-full bg-[#fafcfe]" span={12}>
-        <Image
+        <img
           className="h-full object-contain bg-cover"
           src="/assets/images/signup.png"
           alt="Landing Page"
@@ -155,13 +155,13 @@ function SignUp() {
 
             <p className="text-[16px] font-medium mb-2">
               Already registered?
-              <Link
+              <a
                 href="/login"
                 className="text-custom-blue no-underline hover:underline text-[16px] font-medium text-[#1677ff]"
               >
                 {" "}
                 Login
-              </Link>
+              </a>
             </p>
 
             <Button
@@ -181,7 +181,7 @@ function SignUp() {
         </div>
         <div className="flex justify-center gap-2.5 mt-2.5">
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-google.png"
               height={50}
               width={50}
@@ -189,7 +189,7 @@ function SignUp() {
             />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-fb.png"
               height={50}
               width={50}
@@ -197,7 +197,7 @@ function SignUp() {
             />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-linkedin.png"
               height={50}
               width={50}
@@ -205,7 +205,7 @@ function SignUp() {
             />
           </Button>
           <Button className="w-auto h-auto p-0 border-0">
-            <Image
+            <img
               src="/assets/icons/social-twitter.png"
               height={50}
               width={50}

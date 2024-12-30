@@ -2,7 +2,6 @@
 import React from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
-import Image from "next/image";
 import {
   DownloadOutlined,
   ReloadOutlined,
@@ -89,7 +88,7 @@ const columns: TableColumnsType<DataType> = [
           className="w-auto h-auto p-0 border-0"
           onClick={() => handleEdit(record.key)}
         >
-          <Image
+          <img
             src="/assets/icons/edit.png"
             alt="Edit Icon"
             width={20}
@@ -100,7 +99,7 @@ const columns: TableColumnsType<DataType> = [
           className="w-auto h-auto p-0 border-0"
           onClick={() => handleDelete(record.key)}
         >
-          <Image
+          <img
             src="/assets/icons/delete.png"
             alt="Delete Icon"
             width={20}

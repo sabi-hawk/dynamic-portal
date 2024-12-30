@@ -2,7 +2,6 @@
 import { Col, Row, Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import React from "react";
-import Image from "next/image";
 import { Column } from "@ant-design/plots";
 
 interface DataType {
@@ -197,7 +196,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src="/assets/images/students.png" height={64} width={64} alt="Student Image" />
+              <img src="/assets/images/students.png" height={64} width={64} alt="Student Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Total Students
@@ -208,7 +207,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <Image
+              <img
                 className="w-[18.57px] h-[10px]"
                 src="/assets/icons/arrow-up.png"
                 height={21} width={12}
@@ -221,7 +220,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src="/assets/images/courses.png" height={64} width={64} alt="Courses Image" />
+              <img src="/assets/images/courses.png" height={64} width={64} alt="Courses Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Total Courses
@@ -232,7 +231,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <Image
+              <img
                 className="w-[18.57px] h-[10px]"
                 src="/assets/icons/arrow-down.png"
                 height={21} width={12}
@@ -245,7 +244,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src="/assets/images/teachers.png" height={64} width={64} alt="Teachers Image" />
+              <img src="/assets/images/teachers.png" height={64} width={64} alt="Teachers Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Total Teachers
@@ -256,7 +255,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <Image
+              <img
                 className="w-[18.57px] h-[10px]"
                 src="/assets/icons/arrow-up.png"
                 height={21} width={12}
@@ -269,7 +268,7 @@ function Dashboard() {
         <Col className="h-fit" span={6}>
           <div className="bg-white rounded-[10px] p-[10px_15px] flex flex-col gap-2.5 shadow-[0px_0px_10px_0px_#B7C0CE33]">
             <div className="flex justify-between">
-              <Image src="/assets/images/fee.png" height={64} width={64} alt="Fee Image" />
+              <img src="/assets/images/fee.png" height={64} width={64} alt="Fee Image" />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
                   Fee Collected
@@ -280,7 +279,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <Image
+              <img
                 className="w-[18.57px] h-[10px]"
                 src="/assets/icons/arrow-up.png"
                 height={21} width={12}

@@ -1,5 +1,5 @@
 import React from "react";
-import AdminLayout from "@/components/Layouts/Admin";
+import AdminLayout from "components/Layouts/Admin";
 
 function Admins() {
   return (

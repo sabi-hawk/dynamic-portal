@@ -1,15 +1,19 @@
 "use client";
 import { Col, Row, Button, Menu } from "antd";
 import React, { ReactNode, useEffect, useState } from "react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+// import Image from "next/image";
+// import { usePathname } from "next/navigation";
 import {
   DollarOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import Link from "next/link";
+// import Link from "next/link";
+import { useDispatch } from "react-redux";
+// import { useRouter } from "next/navigation";
+import { clearUser } from "flux/reducers/auth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface LayoutProps {
   children: ReactNode; // Define the type for children
@@ -21,7 +25,7 @@ const items: MenuItem[] = [
   {
     key: "dashboard",
     icon: (
-      <Image
+      <img
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
@@ -29,12 +33,12 @@ const items: MenuItem[] = [
         alt="Dashboard Icon"
       />
     ),
-    label: <Link href="/admin/dashboard">Dashboard</Link>,
+    label: <a href="/admin/dashboard">Dashboard</a>,
   },
   {
     key: "teachers",
     icon: (
-      <Image
+      <img
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
@@ -42,12 +46,12 @@ const items: MenuItem[] = [
         alt="teachers Icon"
       />
     ),
-    label: <Link href="/admin/teachers">Teachers</Link>,
+    label: <a href="/admin/teachers">Teachers</a>,
   },
   {
     key: "students",
     icon: (
-      <Image
+      <img
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
@@ -55,12 +59,12 @@ const items: MenuItem[] = [
         alt="Student Icon"
       />
     ),
-    label: <Link href="/admin/students">Students</Link>,
+    label: <a href="/admin/students">Students</a>,
   },
   {
     key: "courses",
     icon: (
-      <Image
+      <img
         className="w-[11.24px] h-[13px]"
         height={13}
         width={13}
@@ -68,12 +72,12 @@ const items: MenuItem[] = [
         alt="Courses Icon"
       />
     ),
-    label: <Link href="/admin/courses">Courses</Link>,
+    label: <a href="/admin/courses">Courses</a>,
   },
   {
     key: "staff",
     icon: (
-      <Image
+      <img
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
@@ -81,17 +85,17 @@ const items: MenuItem[] = [
         alt="staff Icon"
       />
     ),
-    label: <Link href="/admin/staff">Staff</Link>,
+    label: <a href="/admin/staff">Staff</a>,
   },
   {
     key: "cash-flows",
     icon: <DollarOutlined />,
-    label: <Link href="/admin/cash-flows">Cash Flows</Link>,
+    label: <a href="/admin/cash-flows">Cash Flows</a>,
   },
   {
     key: "attendance",
     icon: (
-      <Image
+      <img
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
@@ -99,12 +103,12 @@ const items: MenuItem[] = [
         alt="attendance Icon"
       />
     ),
-    label: <Link href="/admin/attendance">Attendance</Link>,
+    label: <a href="/admin/attendance">Attendance</a>,
   },
   {
     key: "settings",
     icon: (
-      <Image
+      <img
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
@@ -112,29 +116,35 @@ const items: MenuItem[] = [
         alt="Settings Icon"
       />
     ),
-    label: <Link href="/admin/settings">Settings</Link>,
+    label: <a href="/admin/settings">Settings</a>,
   },
 ];
 
 function AdminLayout({ children }: LayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const pathname = usePathname(); // Get the current path
+  const location = useLocation();
   const [selectedKey, setSelectedKey] = useState<string>("");
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
   useEffect(() => {
     // Check for window to ensure this runs only on the client side
     if (typeof window !== "undefined") {
-      const currentPath = pathname.split("/").pop();
+      const currentPath = location.pathname.split("/").pop();
       const foundItem = items.find((item) => item?.key === currentPath); // Find item by key
       const key = foundItem?.key || "dashboard";
       setSelectedKey(key as string);
     }
-  }, [pathname]);
+  }, [location]);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
+  const handleLogout = () => {
+    dispatch(clearUser());
+    navigate("/");
+  }
   return (
     <Row className="h-screen">
       {/* Navigation */}
@@ -146,7 +156,7 @@ function AdminLayout({ children }: LayoutProps) {
               BRAND LOGO
             </h2>
             <div className="flex flex-col items-center gap-[7px]">
-              <Image
+              <img
                 className="w-[75px] h-[75px] gap-0 rounded-tl-[5px] border-t border-opacity-0 border border-[var(--white)]"
                 src="/assets/images/user.png"
                 alt="User Image"
@@ -186,7 +196,10 @@ function AdminLayout({ children }: LayoutProps) {
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
-          <span>Username</span>
+          <div>
+            <span>Username</span>
+            <Button onClick={handleLogout}>Logout</Button>
+          </div>
         </Row>
         {/* Current Page */}
         <Row className="bg-[#f0f3fb] flex-grow shadow-custom flex flex-col p-[30px]">
