@@ -37,7 +37,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/dashboard.svg"
+        src="/assets/icons/lectures.svg"
         alt="Dashboard Icon"
       />
     ),
@@ -50,7 +50,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/dashboard.svg"
+        src="/assets/icons/leaves.svg"
         alt="Dashboard Icon"
       />
     ),
@@ -63,7 +63,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/dashboard.svg"
+        src="/assets/icons/assignments.svg"
         alt="Dashboard Icon"
       />
     ),
@@ -76,7 +76,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/dashboard.svg"
+        src="/assets/icons/attendance.svg"
         alt="Dashboard Icon"
       />
     ),
@@ -89,7 +89,7 @@ const items: MenuItem[] = [
         className="w-[13px] h-[13px]"
         height={13}
         width={13}
-        src="/assets/icons/dashboard.svg"
+        src="/assets/icons/grade.svg"
         alt="Dashboard Icon"
       />
     ),

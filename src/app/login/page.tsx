@@ -31,7 +31,7 @@ function Login() {
         messageApi.success(message);
         form.resetFields();
         dispatch(setUser(payload));
-        navigate("/admin/dashboard");
+        navigate("/");
       } else {
         throw new Error(message || "Login failed");
       }
