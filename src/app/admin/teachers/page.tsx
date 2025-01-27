@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import {
@@ -9,6 +9,7 @@ import {
   PlusOutlined,
   FilterOutlined,
 } from "@ant-design/icons";
+import TeacherModal from "components/Admin/TeacherModal";
 interface DataType {
   key: React.Key;
   image: string;
@@ -135,6 +136,11 @@ const handleDelete = (key: React.Key) => {
 };
 
 function Teachers() {
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+
   return (
     <div>
       <div>
@@ -163,7 +169,7 @@ function Teachers() {
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Add">
-              <Button>
+              <Button onClick={showModal}>
                 <PlusOutlined
                   style={{
                     fontSize: "18px",
@@ -222,6 +228,7 @@ function Teachers() {
           }}
         />
       </div>
+      <TeacherModal open={open} setOpen={setOpen} />
     </div>
   );
 }

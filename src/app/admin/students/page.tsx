@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import {
@@ -9,6 +9,7 @@ import {
   PlusOutlined,
   FilterOutlined,
 } from "@ant-design/icons";
+import StudentModal from "components/Admin/StudentModal";
 interface DataType {
   key: React.Key;
   image: string;
@@ -108,7 +109,7 @@ const columns: TableColumnsType<DataType> = [
 const data = Array.from({ length: 100 }).map<DataType>((_, i) => ({
   key: i,
   image: "/assets/images/user.png",
-  rollNumber: i+10,
+  rollNumber: i + 10,
   name: `John ${i % 2 === 0 ? "Brown" : "Smith"}`, // Optional: alternate names
   department: "Science",
   gender: i % 2 === 0 ? "Male" : "Female", // Alternate genders
@@ -127,6 +128,11 @@ const handleDelete = (key: React.Key) => {
 };
 
 function Students() {
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+
   return (
     <div>
       <div>
@@ -155,7 +161,7 @@ function Students() {
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Add">
-              <Button>
+              <Button onClick={showModal}>
                 <PlusOutlined
                   style={{
                     fontSize: "18px",
@@ -214,6 +220,7 @@ function Students() {
           }}
         />
       </div>
+      <StudentModal open={open} setOpen={setOpen} />
     </div>
   );
 }
