@@ -188,7 +188,7 @@ function StudentLayout({ children }: LayoutProps) {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <div>
-            <span>Username</span>
+            <span className="mr-2.5">Username</span>
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         </Row>

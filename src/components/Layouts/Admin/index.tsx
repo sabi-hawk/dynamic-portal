@@ -163,7 +163,7 @@ function AdminLayout({ children }: LayoutProps) {
                 width={75}
                 height={75}
               />
-              <span className="font-roboto text-sm font-normal leading-4 text-center">
+              <span className="mr-2.5 font-roboto text-sm font-normal leading-4 text-center">
                 Username
               </span>
               <span className="font-roboto text-xs font-normal leading-[14.06px] text-center">
@@ -197,7 +197,7 @@ function AdminLayout({ children }: LayoutProps) {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <div>
-            <span>Username</span>
+            <span className="mr-2.5">Username</span>
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         </Row>
