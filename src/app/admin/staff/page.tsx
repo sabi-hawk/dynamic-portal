@@ -148,16 +148,7 @@ function Staff() {
     <div>
       <div>
         <div className="flex justify-between p-[20px] bg-[#DAE1F3]">
-          <div className="flex items-center gap-[10px]">
-            <span className="text-[#5B626B] font-roboto text-base font-medium leading-[18.75px] text-center">
-              All Staff
-            </span>
-            <Input
-              className="w-[215px] bg-white rounded-[6px]"
-              addonBefore={<SearchOutlined style={{ color: "#0000008A" }} />}
-              placeholder="Search"
-            />
-          </div>
+          
           <div className="flex gap-[10px]">
             <Tooltip placement="bottom" title="Show/Hide Column">
               <Button>
