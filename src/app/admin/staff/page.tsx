@@ -159,18 +159,7 @@ function Staff() {
             />
           </div>
           <div className="flex gap-[10px]">
-            <Tooltip placement="bottom" title="Show/Hide Column">
-              <Button>
-                <FilterOutlined
-                  style={{
-                    fontSize: "18px",
-                    width: "18px",
-                    height: "18px",
-                    color: "#001B3F",
-                  }}
-                />
-              </Button>
-            </Tooltip>
+           
             <Tooltip placement="bottom" title="Add">
               <Button>
                 <PlusOutlined
