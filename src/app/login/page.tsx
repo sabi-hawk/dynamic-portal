@@ -22,7 +22,6 @@ function Login() {
 
   const handleLogin = async (values: LoginValues) => {
     try {
-      // Simulate API call (replace with your actual API call)
       dispatch(setLoading(true));
       const { status, data } = await login(values);
       const { message, ...payload } = data;
