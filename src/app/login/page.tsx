@@ -20,7 +20,34 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  
+  const handleLogin = async (values: LoginValues) => {
+    try {
+      dispatch(setLoading(true));
+      const { status, data } = await login(values);
+      const { message, ...payload } = data;
+
+      if (status === 200) {
+        messageApi.success(message);
+        form.resetFields();
+        dispatch(setUser(payload));
+        navigate("/");
+      } else {
+        throw new Error(message || "Login failed");
+      }
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        // Handle AxiosError and access the response object
+        messageApi.error(error.response?.data?.message || error.message);
+      } else if (error instanceof Error) {
+        // Handle general error
+        messageApi.error(error.message);
+      } else {
+        messageApi.error("An unexpected error occurred.");
+      }
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
 
   const onFinish = (values: LoginValues) => {
     handleLogin(values);
