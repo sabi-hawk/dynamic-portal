@@ -4,6 +4,7 @@ import { Input, Modal, Form, Select, DatePicker, Row, Col } from "antd";
 import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
+import { addTeacher } from "api/teacher";
 
 
 interface TeacherModalProps {
@@ -16,14 +17,38 @@ function TeacherModal({ open, setOpen }: TeacherModalProps) {
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
 
-  const onFinish: FormProps["onFinish"] = (values) => {
-    console.log("Success:", values);
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
+  // const onFinish: FormProps["onFinish"] = (values) => {
+  //   console.log("Success:", values);
+  //   setConfirmLoading(true);
+  //   setTimeout(() => {
+  //     setOpen(false);
+  //     setConfirmLoading(false);
+  //     messageApi.success("Teacher Added Successfully!");
+  //   }, 2000);
+  // };
+
+  const onFinish: FormProps["onFinish"] = async (values) => {
+    console.log("Submitting Teacher Data:", values);
+
+    try {
+      setConfirmLoading(true);
+      // If using DatePicker, convert date to ISO string
+      const payload = {
+        ...values,
+        joiningDate: values.joiningDate?.toISOString(), // ensures consistent date format
+      };
+
+      const response = await addTeacher(payload); // Adjust base URL if needed
+
       messageApi.success("Teacher Added Successfully!");
-    }, 2000);
+      form.resetFields(); // clear the form
+      setOpen(false);
+    } catch (error: any) {
+      console.error("Failed to add teacher:", error);
+      messageApi.error("Failed to add teacher. Please try again.");
+    } finally {
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {

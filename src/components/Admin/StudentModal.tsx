@@ -4,6 +4,7 @@ import { Input, Modal, Form, Select, DatePicker, Row, Col } from "antd";
 import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
+import { addStudent } from "api/student";
 
 
 interface StudentModalProps {
@@ -16,14 +17,25 @@ function StudentModal({ open, setOpen }: StudentModalProps) {
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
 
-  const onFinish: FormProps["onFinish"] = (values) => {
-    console.log("Success:", values);
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
+  const onFinish: FormProps["onFinish"] = async (values) => {
+    const payload = {
+      ...values,
+      admissionDate: values.admissionDate?.toISOString(), // convert date to ISO string
+    };
+
+    try {
+      setConfirmLoading(true);
+      const response = await addStudent(payload);
+      // await axios.post("/students/add", payload);
       messageApi.success("Student Added Successfully!");
-    }, 2000);
+      form.resetFields(); // Clear the form
+      setOpen(false);
+    } catch (error) {
+      messageApi.error("Failed to add student!");
+      console.error("Add Student Error:", error);
+    } finally {
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {
