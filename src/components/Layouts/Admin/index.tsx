@@ -35,19 +35,19 @@ const items: MenuItem[] = [
     ),
     label: <a href="/admin/dashboard">Dashboard</a>,
   },
-  {
-    key: "teachers",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/teachers.svg"
-        alt="teachers Icon"
-      />
-    ),
-    label: <a href="/admin/teachers">Teachers</a>,
-  },
+  // {
+  //   key: "teachers",
+  //   icon: (
+  //     <img
+  //       className="w-[13px] h-[13px]"
+  //       height={13}
+  //       width={13}
+  //       src="/assets/icons/teachers.svg"
+  //       alt="teachers Icon"
+  //     />
+  //   ),
+  //   label: <a href="/admin/teachers">Teachers</a>,
+  // },
   {
     key: "students",
     icon: (
@@ -126,7 +126,7 @@ function AdminLayout({ children }: LayoutProps) {
   const [selectedKey, setSelectedKey] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // Check for window to ensure this runs only on the client side
     if (typeof window !== "undefined") {
@@ -144,7 +144,7 @@ function AdminLayout({ children }: LayoutProps) {
   const handleLogout = () => {
     dispatch(clearUser());
     navigate("/");
-  }
+  };
   return (
     <Row className="h-screen">
       {/* Navigation */}

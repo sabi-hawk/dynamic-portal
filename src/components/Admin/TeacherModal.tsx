@@ -6,13 +6,13 @@ import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
 import { addTeacher } from "api/teacher";
 
-
 interface TeacherModalProps {
   open: boolean; // `open` should be of type `boolean`
   setOpen: React.Dispatch<React.SetStateAction<boolean>>; // `setOpen` is a setter function for state
+  onSuccess?: () => void; // New prop for callback
 }
 
-function TeacherModal({ open, setOpen }: TeacherModalProps) {
+function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
@@ -43,6 +43,7 @@ function TeacherModal({ open, setOpen }: TeacherModalProps) {
       messageApi.success("Teacher Added Successfully!");
       form.resetFields(); // clear the form
       setOpen(false);
+      if (onSuccess) onSuccess(); // Call the onSuccess callback to refresh the teacher list
     } catch (error: any) {
       console.error("Failed to add teacher:", error);
       messageApi.error("Failed to add teacher. Please try again.");
@@ -214,7 +215,6 @@ function TeacherModal({ open, setOpen }: TeacherModalProps) {
                 options={[
                   { value: "Admin", label: "Admin" },
                   { value: "Teacher", label: "Teacher" },
-                  { value: "Student", label: "Student" },
                 ]}
                 className="custom-select"
               />

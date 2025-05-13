@@ -10,6 +10,8 @@ interface TeacherPayload {
   email: string;
   joiningDate: string; // ISO string
 }
+
 export const addTeacher = (payload: TeacherPayload) =>
   API.post("/teacher/add", payload);
 
+export const getTeachers = () => API.get("/teacher/");

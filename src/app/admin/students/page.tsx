@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import {
@@ -10,10 +10,13 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import StudentModal from "components/Admin/StudentModal";
+import { getStudents } from "api/student";
+import { useMessageApi } from "utils";
+
 interface DataType {
   key: React.Key;
   image: string;
-  rollNumber: number;
+  rollNo: number;
   name: string;
   department: string;
   gender: string;
@@ -25,7 +28,7 @@ interface DataType {
 const columns: TableColumnsType<DataType> = [
   {
     title: "Roll No.",
-    dataIndex: "rollNumber",
+    dataIndex: "rollNo",
   },
   {
     title: "Name",
@@ -74,64 +77,98 @@ const columns: TableColumnsType<DataType> = [
     title: "Admission Date",
     dataIndex: "admissionDate",
   },
-  {
-    title: "Actions",
-    dataIndex: "actions",
-    render: (_, record) => (
-      <Space size="middle">
-        <Button
-          className="w-auto h-auto p-0 border-0"
-          onClick={() => handleEdit(record.key)}
-        >
-          <img
-            src="/assets/icons/edit.png"
-            alt="Edit Icon"
-            width={20}
-            height={20}
-          />
-        </Button>
-        <Button
-          className="w-auto h-auto p-0 border-0"
-          onClick={() => handleDelete(record.key)}
-        >
-          <img
-            src="/assets/icons/delete.png"
-            alt="Delete Icon"
-            width={20}
-            height={20}
-          />
-        </Button>
-      </Space>
-    ),
-  },
 ];
 
-const data = Array.from({ length: 100 }).map<DataType>((_, i) => ({
-  key: i,
-  image: "/assets/images/user.png",
-  rollNumber: i + 10,
-  name: `John ${i % 2 === 0 ? "Brown" : "Smith"}`, // Optional: alternate names
-  department: "Science",
-  gender: i % 2 === 0 ? "Male" : "Female", // Alternate genders
-  degree: "PhD",
-  mobile: "123-456-7890",
-  email: `john${i}@example.com`,
-  admissionDate: "2022-01-10",
-}));
-
-const handleEdit = (key: React.Key) => {
-  console.log("Edit record", key);
-};
-
-const handleDelete = (key: React.Key) => {
-  console.log("Delete record", key);
-};
-
-function Students() {
+const Students = () => {
   const [open, setOpen] = useState(false);
+  const [students, setStudents] = useState<DataType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+  const [total, setTotal] = useState(0);
+  const messageApi = useMessageApi();
+
+  const fetchStudents = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await getStudents();
+
+      const formattedData = response.data.map((student: any) => ({
+        key: student.id || student._id,
+        image: student.image || "/assets/images/user.png",
+        rollNo: student.rollNo,
+        name: student.name,
+        department: student.department,
+        gender: student.gender,
+        mobile: student.mobile,
+        email: student.email,
+        admissionDate: student.admissionDate,
+      }));
+      setStudents(formattedData);
+      setTotal(response.data.total || formattedData.length);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      messageApi.error("Failed to load students");
+    } finally {
+      setLoading(false);
+    }
+  }, [messageApi]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
+
   const showModal = () => {
     setOpen(true);
   };
+
+  const handleReload = () => {
+    fetchStudents();
+  };
+
+  const handleEdit = (key: React.Key) => {
+    console.log("Edit record", key);
+  };
+
+  const handleDelete = (key: React.Key) => {
+    console.log("Delete record", key);
+  };
+
+  const actionColumns: TableColumnsType<DataType> = [
+    ...columns.filter((col) => col.title !== "Actions"),
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            className="w-auto h-auto p-0 border-0"
+            onClick={() => handleEdit(record.key)}
+          >
+            <img
+              src="/assets/icons/edit.png"
+              alt="Edit Icon"
+              width={20}
+              height={20}
+            />
+          </Button>
+          <Button
+            className="w-auto h-auto p-0 border-0"
+            onClick={() => handleDelete(record.key)}
+          >
+            <img
+              src="/assets/icons/delete.png"
+              alt="Delete Icon"
+              width={20}
+              height={20}
+            />
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div>
@@ -173,7 +210,7 @@ function Students() {
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Refresh">
-              <Button>
+              <Button onClick={handleReload}>
                 <ReloadOutlined
                   style={{
                     fontSize: "18px",
@@ -200,29 +237,28 @@ function Students() {
         </div>
         <Table<DataType>
           rowSelection={{ type: "checkbox", columnWidth: "50px" }}
-          columns={columns}
-          dataSource={data}
-          // scroll={{ y: "100%" }}
+          columns={actionColumns}
+          dataSource={students}
+          loading={loading}
           pagination={{
             position: ["bottomLeft"],
             className: "table-pagination",
-            // total: smsData && smsData.pagination.total,
-            total: 100,
+            total: total,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
             showSizeChanger: true,
             showQuickJumper: true,
-            // pageSize: pagination.pageSize,
-            pageSize: 10,
-            // onChange: (page, pageSize) => {
-            //   setPagination({ page, pageSize });
-            // },
+            pageSize: pagination.pageSize,
+            current: pagination.page,
+            onChange: (page, pageSize) => {
+              setPagination({ page, pageSize });
+            },
           }}
         />
       </div>
-      <StudentModal open={open} setOpen={setOpen} />
+      <StudentModal open={open} setOpen={setOpen} onSuccess={fetchStudents} />
     </div>
   );
-}
+};
 
 export default Students;

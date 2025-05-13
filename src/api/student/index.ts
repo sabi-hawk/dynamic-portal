@@ -12,3 +12,4 @@ interface StudentPayload {
 export const addStudent = (payload: StudentPayload) =>
   API.post("/student/add", payload);
 
+export const getStudents = () => API.get("/student/");

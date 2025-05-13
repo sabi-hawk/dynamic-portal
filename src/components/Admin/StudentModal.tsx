@@ -6,13 +6,13 @@ import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
 import { addStudent } from "api/student";
 
-
 interface StudentModalProps {
   open: boolean; // `open` should be of type `boolean`
   setOpen: React.Dispatch<React.SetStateAction<boolean>>; // `setOpen` is a setter function for state
+  onSuccess?: () => void; // New prop for callback
 }
 
-function StudentModal({ open, setOpen }: StudentModalProps) {
+function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
@@ -30,6 +30,7 @@ function StudentModal({ open, setOpen }: StudentModalProps) {
       messageApi.success("Student Added Successfully!");
       form.resetFields(); // Clear the form
       setOpen(false);
+      if (onSuccess) onSuccess(); // Call the onSuccess callback to refresh the student list
     } catch (error) {
       messageApi.error("Failed to add student!");
       console.error("Add Student Error:", error);
