@@ -5,6 +5,7 @@ import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
 import { addTeacher } from "api/teacher";
+import { register } from "api/auth";
 
 interface TeacherModalProps {
   open: boolean; // `open` should be of type `boolean`
@@ -36,9 +37,10 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
       const payload = {
         ...values,
         joiningDate: values.joiningDate?.toISOString(), // ensures consistent date format
+        role: "teacher",
       };
 
-      const response = await addTeacher(payload); // Adjust base URL if needed
+      await register(payload); // Adjust base URL if needed
 
       messageApi.success("Teacher Added Successfully!");
       form.resetFields(); // clear the form
@@ -201,7 +203,7 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
           <Col span={12}>
             <Form.Item
               label="Role"
-              name="role"
+              name="type"
               rules={[
                 {
                   required: true,
@@ -213,8 +215,9 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
                 placeholder="Select Role"
                 onChange={handleChange}
                 options={[
-                  { value: "Admin", label: "Admin" },
-                  { value: "Teacher", label: "Teacher" },
+                  { value: "teacher", label: "Teacher" },
+                  { value: "clerk", label: "Clerk" },
+                  { value: "accounts", label: "Accounts" },
                 ]}
                 className="custom-select"
               />
@@ -241,7 +244,27 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
               />
             </Form.Item>
           </Col>
-
+          <Col span={12}>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your password",
+                },
+                {
+                  min: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder="Password*"
+                className="custom-input"
+              />
+            </Form.Item>
+          </Col>
           {/* Joining Date */}
           <Col span={12}>
             <Form.Item

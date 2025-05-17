@@ -24,7 +24,7 @@ function SignUp() {
   const handleSignUp = async (values: SignUpValues) => {
     try {
       // Simulate API call (replace with your actual API call)
-      const { status, data } = await register(values);
+      const { status, data } = await register({...values, role: 'admin'});
 
       if (status === 201) {
         messageApi.success(data.message);

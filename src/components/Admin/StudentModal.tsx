@@ -5,6 +5,7 @@ import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
 import { addStudent } from "api/student";
+import { register } from "api/auth";
 
 interface StudentModalProps {
   open: boolean; // `open` should be of type `boolean`
@@ -21,11 +22,12 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
     const payload = {
       ...values,
       admissionDate: values.admissionDate?.toISOString(), // convert date to ISO string
+      role: "student",
     };
 
     try {
       setConfirmLoading(true);
-      const response = await addStudent(payload);
+      await register(payload);
       // await axios.post("/students/add", payload);
       messageApi.success("Student Added Successfully!");
       form.resetFields(); // Clear the form
@@ -179,7 +181,27 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
-
+          <Col span={12}>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your password",
+                },
+                {
+                  min: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder="Password*"
+                className="custom-input"
+              />
+            </Form.Item>
+          </Col>
           {/* Admission Date */}
           <Col span={12}>
             <Form.Item

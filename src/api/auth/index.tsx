@@ -12,5 +12,5 @@ type SignupPayload = {
 export const login = (loginData: loginPayload) =>
   API.post("/auth/login", loginData);
 
-export const register = (signUpData: SignupPayload) =>
+export const register = (signUpData: any) =>
   API.post("/auth/register", signUpData);
