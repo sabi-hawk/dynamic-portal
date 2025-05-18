@@ -27,7 +27,9 @@ function Login() {
       const { message, ...payload } = data;
 
       if (status === 200) {
-        messageApi.success(message);
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        messageApi.success(data.message || "Login successful");
         form.resetFields();
         dispatch(setUser(payload));
         navigate("/");

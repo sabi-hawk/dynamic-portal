@@ -15,6 +15,7 @@ interface SignUpValues {
   username: string;
   email: string;
   password: string;
+  role?: string;
 }
 
 function SignUp() {
@@ -23,22 +24,23 @@ function SignUp() {
 
   const handleSignUp = async (values: SignUpValues) => {
     try {
-      // Simulate API call (replace with your actual API call)
-      const { status, data } = await register({...values, role: 'admin'});
+      const signupData = {
+        ...values,
+        role: "admin",
+      };
+
+      const { status, data } = await register(signupData);
 
       if (status === 201) {
         messageApi.success(data.message);
-        // Optionally redirect to another page or clear the form
         form.resetFields();
       } else {
         throw new Error(data.message || "Signup failed");
       }
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        // Handle AxiosError and access the response object
         messageApi.error(error.response?.data?.message || error.message);
       } else if (error instanceof Error) {
-        // Handle general error
         messageApi.error(error.message);
       } else {
         messageApi.error("An unexpected error occurred.");
