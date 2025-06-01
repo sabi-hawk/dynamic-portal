@@ -221,6 +221,35 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
+
+          {/* Section Dropdown */}
+          <Col span={12}>
+            <Form.Item
+              label="Section"
+              name="section"
+              initialValue="A"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a section",
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select Section"
+                onChange={handleChange}
+                options={[
+                  { value: "A", label: "A" },
+                  { value: "B", label: "B" },
+                  { value: "C", label: "C" },
+                  { value: "D", label: "D" },
+                  { value: "E", label: "E" },
+                  { value: "F", label: "F" },
+                ]}
+                className="custom-select"
+              />
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
     </Modal>

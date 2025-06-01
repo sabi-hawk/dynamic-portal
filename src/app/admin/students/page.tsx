@@ -23,6 +23,7 @@ interface DataType {
   mobile: string;
   email: string;
   admissionDate: string;
+  section: string;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -49,6 +50,10 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Department",
     dataIndex: "department",
+  },
+  {
+    title: "Section",
+    dataIndex: "section",
   },
   {
     title: "Gender",
@@ -105,6 +110,7 @@ const Students = () => {
         mobile: student.mobile,
         email: student.email,
         admissionDate: student.admissionDate,
+        section: student.section,
       }));
       setStudents(formattedData);
       setTotal(response.data.total || formattedData.length);

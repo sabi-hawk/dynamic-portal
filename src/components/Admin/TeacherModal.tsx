@@ -18,16 +18,6 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
 
-  // const onFinish: FormProps["onFinish"] = (values) => {
-  //   console.log("Success:", values);
-  //   setConfirmLoading(true);
-  //   setTimeout(() => {
-  //     setOpen(false);
-  //     setConfirmLoading(false);
-  //     messageApi.success("Teacher Added Successfully!");
-  //   }, 2000);
-  // };
-
   const onFinish: FormProps["onFinish"] = async (values) => {
     console.log("Submitting Teacher Data:", values);
 
@@ -281,6 +271,35 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
                 style={{ width: "100%" }}
                 placeholder="Select Joining Date"
                 className="custom-date-picker"
+              />
+            </Form.Item>
+          </Col>
+
+          {/* Section Dropdown */}
+          <Col span={12}>
+            <Form.Item
+              label="Section"
+              name="section"
+              initialValue="A"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a section",
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select Section"
+                onChange={handleChange}
+                options={[
+                  { value: "A", label: "A" },
+                  { value: "B", label: "B" },
+                  { value: "C", label: "C" },
+                  { value: "D", label: "D" },
+                  { value: "E", label: "E" },
+                  { value: "F", label: "F" },
+                ]}
+                className="custom-select"
               />
             </Form.Item>
           </Col>

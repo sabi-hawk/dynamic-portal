@@ -21,6 +21,7 @@ interface DataType {
   mobile: string;
   email: string;
   joiningDate: string;
+  section: string;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -43,6 +44,10 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Department",
     dataIndex: "department",
+  },
+  {
+    title: "Section",
+    dataIndex: "section",
   },
   {
     title: "Gender",
@@ -125,6 +130,7 @@ const data = Array.from({ length: 100 }).map<DataType>((_, i) => ({
   role: i % 2 === 0 ? "Teacher" : "Admin", // Alternate roles
   email: `john${i}@example.com`,
   joiningDate: "2022-01-10",
+  section: "A",
 }));
 
 const handleEdit = (key: React.Key) => {
