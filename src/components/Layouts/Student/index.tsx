@@ -57,45 +57,6 @@ const items: MenuItem[] = [
     label: <a href="/student/lectures">Class Schedules</a>,
   },
   {
-    key: "assignments",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/assignments.svg"
-        alt="Dashboard Icon"
-      />
-    ),
-    label: <a href="/student/assignments">Assignments</a>,
-  },
-  {
-    key: "attendance",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/attendance.svg"
-        alt="Dashboard Icon"
-      />
-    ),
-    label: <a href="/student/attendance">Attendance</a>,
-  },
-  {
-    key: "grade",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/grade.svg"
-        alt="Dashboard Icon"
-      />
-    ),
-    label: <a href="/student/grade">Grade</a>,
-  },
-  {
     key: "settings",
     icon: (
       <img
