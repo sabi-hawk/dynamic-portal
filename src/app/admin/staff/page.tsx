@@ -10,14 +10,16 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import TeacherModal from "components/Admin/TeacherModal";
-import { getTeachers } from "api/teacher";
+import { getTeachers, deleteTeacher } from "api/teacher";
 import { useMessageApi } from "utils";
+import axios from "axios";
 
 interface DataType {
-  key: React.Key;
+  _id: React.Key;
   image: string;
   name: string;
   department: string;
+  section: string;
   role: string;
   mobile: string;
   email: string;
@@ -30,6 +32,8 @@ interface DataType {
 
 const Staff = () => {
   const [open, setOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState<any>(null);
   const [teachers, setTeachers] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -45,15 +49,18 @@ const Staff = () => {
       const response = await getTeachers();
 
       const formattedData = response.data.map((teacher: any) => ({
-        key: teacher.id || teacher._id,
+        _id: teacher.id || teacher._id,
         image: teacher.image || "/assets/images/user.png",
-        name: teacher.name,
+        name: teacher.name
+          ? { first: teacher.name.first || '', last: teacher.name.last || '' }
+          : { first: '', last: '' },
         department: teacher.department,
         role: teacher.role || "Teacher",
+        section: teacher.section || "N/A",
         mobile: teacher.mobile,
         email: teacher.email,
         address: teacher.address || "N/A",
-        status: "Active", // Default status
+        status: teacher.status || "Active",
         joiningDate: teacher.joiningDate,
         gender: teacher.gender,
         degree: teacher.degree,
@@ -73,6 +80,8 @@ const Staff = () => {
   }, [fetchTeachers]);
 
   const showModal = () => {
+    setEditMode(false);
+    setSelectedTeacher(null);
     setOpen(true);
   };
 
@@ -80,19 +89,31 @@ const Staff = () => {
     fetchTeachers();
   };
 
-  const handleEdit = (key: React.Key) => {
-    console.log("Edit record", key);
+  const handleEdit = (_id: React.Key) => {
+    const teacher = teachers.find((t) => t._id === _id);
+    if (teacher) {
+      setSelectedTeacher(teacher);
+      setEditMode(true);
+      setOpen(true);
+    }
   };
 
-  const handleDelete = (key: React.Key) => {
-    console.log("Delete record", key);
+  const handleDelete = async (key: React.Key) => {
+    try {
+      await deleteTeacher(key.toString());
+      messageApi.success("Teacher deleted successfully");
+      fetchTeachers(); // Refresh the list
+    } catch (error) {
+      console.error("Error deleting teacher:", error);
+      messageApi.error("Failed to delete teacher");
+    }
   };
 
   const columns: TableColumnsType<DataType> = [
     {
       title: "Name",
       dataIndex: "name",
-      render: (_, record) => (
+      render: (name: { first: string; last: string }, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <img
             src={record.image}
@@ -101,13 +122,17 @@ const Staff = () => {
             height={40}
             style={{ borderRadius: "50%", marginRight: "8px" }}
           />
-          <span>{record.name}</span>
+          <span>{`${name.first} ${name.last}`.trim()}</span>
         </div>
       ),
     },
     {
       title: "Department",
       dataIndex: "department",
+    },
+    {
+      title: "Section",
+      dataIndex: "section",
     },
     {
       title: "Role",
@@ -158,7 +183,7 @@ const Staff = () => {
         <Space size="middle">
           <Button
             className="w-auto h-auto p-0 border-0"
-            onClick={() => handleEdit(record.key)}
+            onClick={() => handleEdit(record._id)}
           >
             <img
               src="/assets/icons/edit.png"
@@ -169,7 +194,7 @@ const Staff = () => {
           </Button>
           <Button
             className="w-auto h-auto p-0 border-0"
-            onClick={() => handleDelete(record.key)}
+            onClick={() => handleDelete(record._id)}
           >
             <img
               src="/assets/icons/delete.png"
@@ -269,7 +294,13 @@ const Staff = () => {
           }}
         />
       </div>
-      <TeacherModal open={open} setOpen={setOpen} onSuccess={fetchTeachers} />
+      <TeacherModal 
+        open={open} 
+        setOpen={setOpen} 
+        onSuccess={fetchTeachers}
+        editMode={editMode}
+        teacherData={selectedTeacher}
+      />
     </div>
   );
 };

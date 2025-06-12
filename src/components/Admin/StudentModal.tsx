@@ -1,49 +1,70 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Modal, Form, Select, DatePicker, Row, Col } from "antd";
 import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
-import { addStudent } from "api/student";
+import { addStudent, updateStudent } from "api/student";
 import { register } from "api/auth";
+import dayjs from "dayjs";
 
 interface StudentModalProps {
-  open: boolean; // `open` should be of type `boolean`
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>; // `setOpen` is a setter function for state
-  onSuccess?: () => void; // New prop for callback
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess?: () => void;
+  editMode?: boolean;
+  studentData?: any;
 }
 
-function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
+function StudentModal({ open, setOpen, onSuccess, editMode = false, studentData }: StudentModalProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
 
-  const onFinish: FormProps["onFinish"] = async (values) => {
-    const payload = {
-      ...values,
-      admissionDate: values.admissionDate?.toISOString(), // convert date to ISO string
-      role: "student",
-    };
+  // Set form values when in edit mode
+  useEffect(() => {
+    if (editMode && studentData) {
+      form.setFieldsValue({
+        ...studentData,
+        admissionDate: studentData.admissionDate ? dayjs(studentData.admissionDate) : undefined,
+      });
+    }
+  }, [editMode, studentData, form]);
 
+  const onFinish: FormProps["onFinish"] = async (values) => {
     try {
       setConfirmLoading(true);
-      await register(payload);
-      // await axios.post("/students/add", payload);
-      messageApi.success("Student Added Successfully!");
-      form.resetFields(); // Clear the form
+      const payload = {
+        ...values,
+        admissionDate: values.admissionDate?.toISOString(),
+        role: "student",
+      };
+      if (editMode && studentData) {
+        await updateStudent(studentData.key, payload);
+        messageApi.success("Student Updated Successfully!");
+      } else {
+        // For new student registration
+        const { name, ...rest } = payload;
+        await register({
+          ...rest,
+          name: `${name.first} ${name.last}`.trim(),
+        });
+        messageApi.success("Student Added Successfully!");
+      }
+      form.resetFields();
       setOpen(false);
-      if (onSuccess) onSuccess(); // Call the onSuccess callback to refresh the student list
-    } catch (error) {
-      messageApi.error("Failed to add student!");
-      console.error("Add Student Error:", error);
+      if (onSuccess) onSuccess();
+    } catch (error: any) {
+      console.error("Failed to save student:", error);
+      messageApi.error(`Failed to ${editMode ? 'update' : 'add'} student. Please try again.`);
     } finally {
       setConfirmLoading(false);
     }
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
+    form.resetFields();
   };
 
   const handleChange = (value: string) => {
@@ -52,12 +73,13 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
 
   return (
     <Modal
-      title="Add Student"
+      title={editMode ? "Edit Student" : "Add Student"}
       open={open}
       onOk={() => form.submit()}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
-      okText="Save"
+      okText={editMode ? "Update" : "Save"}
+      width={640}
     >
       <Form
         form={form}
@@ -66,36 +88,45 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
         style={{ borderRadius: "0.35rem" }}
       >
         <Row gutter={16}>
-          {/* Name Field */}
-          <Col span={12}>
+          {/* First Name Field */}
+          <Col span={8}>
             <Form.Item
-              label="Name"
-              name="name"
+              label="First Name"
+              name={["name", "first"]}
               rules={[
-                {
-                  required: true,
-                  message: "Please enter Name",
-                },
+                { required: true, message: "Please enter First Name" },
               ]}
             >
               <Input
                 suffix={<UserOutlined />}
-                placeholder="Name*"
+                placeholder="First Name*"
                 className="custom-input"
               />
             </Form.Item>
           </Col>
-
+          {/* Last Name Field */}
+          <Col span={8}>
+            <Form.Item
+              label="Last Name"
+              name={["name", "last"]}
+              rules={[
+                { required: true, message: "Please enter Last Name" },
+              ]}
+            >
+              <Input
+                suffix={<UserOutlined />}
+                placeholder="Last Name*"
+                className="custom-input"
+              />
+            </Form.Item>
+          </Col>
           {/* Department Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Department"
               name="department"
               rules={[
-                {
-                  required: true,
-                  message: "Please select a department",
-                },
+                { required: true, message: "Please select a department" },
               ]}
             >
               <Select
@@ -111,17 +142,13 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
-
           {/* Gender Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Gender"
               name="gender"
               rules={[
-                {
-                  required: true,
-                  message: "Please select a gender",
-                },
+                { required: true, message: "Please select a gender" },
               ]}
             >
               <Select
@@ -136,21 +163,14 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
-
           {/* Mobile Field */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Mobile"
               name="mobile"
               rules={[
-                {
-                  required: true,
-                  message: "Please enter Mobile Number",
-                },
-                {
-                  pattern: /^[0-9]{10}$/,
-                  message: "Enter a valid 10-digit number",
-                },
+                { required: true, message: "Please enter Mobile Number" },
+                { pattern: /^[0-9]{10}$/, message: "Enter a valid 10-digit number" },
               ]}
             >
               <Input
@@ -160,18 +180,13 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
-
           {/* Email Field */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Email"
               name="email"
               rules={[
-                {
-                  required: true,
-                  type: "email",
-                  message: "Please enter a valid email",
-                },
+                { required: true, type: "email", message: "Please enter a valid email" },
               ]}
             >
               <Input
@@ -181,37 +196,31 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter your password",
-                },
-                {
-                  min: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              ]}
-            >
-              <Input.Password
-                placeholder="Password*"
-                className="custom-input"
-              />
-            </Form.Item>
-          </Col>
+          {/* Password Field (only for add) */}
+          {!editMode && (
+            <Col span={8}>
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[
+                  { required: true, message: "Please enter your password" },
+                  { min: 6, message: "Password must be at least 6 characters" },
+                ]}
+              >
+                <Input.Password
+                  placeholder="Password*"
+                  className="custom-input"
+                />
+              </Form.Item>
+            </Col>
+          )}
           {/* Admission Date */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Admission Date"
               name="admissionDate"
               rules={[
-                {
-                  required: true,
-                  message: "Please select a admission date",
-                },
+                { required: true, message: "Please select a admission date" },
               ]}
             >
               <DatePicker
@@ -221,18 +230,14 @@ function StudentModal({ open, setOpen, onSuccess }: StudentModalProps) {
               />
             </Form.Item>
           </Col>
-
           {/* Section Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Section"
               name="section"
               initialValue="A"
               rules={[
-                {
-                  required: true,
-                  message: "Please select a section",
-                },
+                { required: true, message: "Please select a section" },
               ]}
             >
               <Select

@@ -9,9 +9,15 @@ interface TeacherPayload {
   role: string;
   email: string;
   joiningDate: string; // ISO string
+  password?: string; // Optional for updates
 }
 
 export const addTeacher = (payload: TeacherPayload) =>
   API.post("/teacher/add", payload);
 
 export const getTeachers = () => API.get("/teacher/");
+
+export const deleteTeacher = (id: string) => API.delete(`/teacher/${id}`);
+
+export const updateTeacher = (id: string, payload: Partial<TeacherPayload>) =>
+  API.put(`/teacher/${id}`, payload);

@@ -1,51 +1,71 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Modal, Form, Select, DatePicker, Row, Col } from "antd";
 import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
-import { addTeacher } from "api/teacher";
+import { addTeacher, updateTeacher } from "api/teacher";
 import { register } from "api/auth";
+import dayjs from "dayjs";
 
 interface TeacherModalProps {
-  open: boolean; // `open` should be of type `boolean`
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>; // `setOpen` is a setter function for state
-  onSuccess?: () => void; // New prop for callback
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess?: () => void;
+  editMode?: boolean;
+  teacherData?: any;
 }
 
-function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
+function TeacherModal({ open, setOpen, onSuccess, editMode = false, teacherData }: TeacherModalProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
 
-  const onFinish: FormProps["onFinish"] = async (values) => {
-    console.log("Submitting Teacher Data:", values);
+  // Set form values when in edit mode
+  useEffect(() => {
+    if (editMode && teacherData) {
+      form.setFieldsValue({
+        ...teacherData,
+        joiningDate: teacherData.joiningDate ? dayjs(teacherData.joiningDate) : undefined,
+      });
+    }
+  }, [editMode, teacherData, form]);
 
+  const onFinish: FormProps["onFinish"] = async (values) => {
     try {
       setConfirmLoading(true);
-      // If using DatePicker, convert date to ISO string
       const payload = {
         ...values,
-        joiningDate: values.joiningDate?.toISOString(), // ensures consistent date format
+        joiningDate: values.joiningDate?.toISOString(),
         role: "teacher",
       };
 
-      await register(payload); // Adjust base URL if needed
+      if (editMode && teacherData) {
+        await updateTeacher(teacherData._id, payload);
+        messageApi.success("Teacher Updated Successfully!");
+      } else {
+        // For new teacher registration
+        const { name, ...rest } = payload;
+        await register({
+          ...rest,
+          name: `${name.first} ${name.last}`.trim(), // Combine first and last name for registration
+        });
+        messageApi.success("Teacher Added Successfully!");
+      }
 
-      messageApi.success("Teacher Added Successfully!");
-      form.resetFields(); // clear the form
+      form.resetFields();
       setOpen(false);
-      if (onSuccess) onSuccess(); // Call the onSuccess callback to refresh the teacher list
+      if (onSuccess) onSuccess();
     } catch (error: any) {
-      console.error("Failed to add teacher:", error);
-      messageApi.error("Failed to add teacher. Please try again.");
+      console.error("Failed to save teacher:", error);
+      messageApi.error(`Failed to ${editMode ? 'update' : 'add'} teacher. Please try again.`);
     } finally {
       setConfirmLoading(false);
     }
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    form.resetFields();
     setOpen(false);
   };
 
@@ -55,12 +75,13 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
 
   return (
     <Modal
-      title="Add Teacher"
+      title={editMode ? "Edit Teacher" : "Add Teacher"}
       open={open}
       onOk={() => form.submit()}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
-      okText="Save"
+      okText={editMode ? "Update" : "Save"}
+      width={640}
     >
       <Form
         form={form}
@@ -69,28 +90,48 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
         style={{ borderRadius: "0.35rem" }}
       >
         <Row gutter={16}>
-          {/* Name Field */}
-          <Col span={12}>
+          {/* First Name Field */}
+          <Col span={8}>
             <Form.Item
-              label="Name"
-              name="name"
+              label="First Name"
+              name={["name", "first"]}
               rules={[
                 {
                   required: true,
-                  message: "Please enter Name",
+                  message: "Please enter First Name",
                 },
               ]}
             >
               <Input
                 suffix={<UserOutlined />}
-                placeholder="Name*"
+                placeholder="First Name*"
+                className="custom-input"
+              />
+            </Form.Item>
+          </Col>
+
+          {/* Last Name Field */}
+          <Col span={8}>
+            <Form.Item
+              label="Last Name"
+              name={["name", "last"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter Last Name",
+                },
+              ]}
+            >
+              <Input
+                suffix={<UserOutlined />}
+                placeholder="Last Name*"
                 className="custom-input"
               />
             </Form.Item>
           </Col>
 
           {/* Department Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Department"
               name="department"
@@ -116,7 +157,7 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
           </Col>
 
           {/* Degree Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Degree"
               name="degree"
@@ -141,7 +182,7 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
           </Col>
 
           {/* Gender Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Gender"
               name="gender"
@@ -166,7 +207,7 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
           </Col>
 
           {/* Mobile Field */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Mobile"
               name="mobile"
@@ -188,34 +229,10 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
               />
             </Form.Item>
           </Col>
-
-          {/* Role Dropdown */}
-          <Col span={12}>
-            <Form.Item
-              label="Role"
-              name="type"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select a role",
-                },
-              ]}
-            >
-              <Select
-                placeholder="Select Role"
-                onChange={handleChange}
-                options={[
-                  { value: "teacher", label: "Teacher" },
-                  { value: "clerk", label: "Clerk" },
-                  { value: "accounts", label: "Accounts" },
-                ]}
-                className="custom-select"
-              />
-            </Form.Item>
-          </Col>
+          
 
           {/* Email Field */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Email"
               name="email"
@@ -234,13 +251,13 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Password"
               name="password"
               rules={[
                 {
-                  required: true,
+                  required: !editMode,
                   message: "Please enter your password",
                 },
                 {
@@ -250,13 +267,13 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
               ]}
             >
               <Input.Password
-                placeholder="Password*"
+                placeholder={editMode ? "Leave blank to keep current password" : "Password*"}
                 className="custom-input"
               />
             </Form.Item>
           </Col>
           {/* Joining Date */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Joining Date"
               name="joiningDate"
@@ -276,7 +293,7 @@ function TeacherModal({ open, setOpen, onSuccess }: TeacherModalProps) {
           </Col>
 
           {/* Section Dropdown */}
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               label="Section"
               name="section"

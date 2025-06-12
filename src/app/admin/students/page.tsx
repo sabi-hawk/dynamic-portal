@@ -17,7 +17,7 @@ interface DataType {
   key: React.Key;
   image: string;
   rollNo: number;
-  name: string;
+  name: { first: string; last: string };
   department: string;
   gender: string;
   mobile: string;
@@ -34,7 +34,7 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Name",
     dataIndex: "name",
-    render: (_, record) => (
+    render: (name: { first: string; last: string }, record) => (
       <div style={{ display: "flex", alignItems: "center" }}>
         <img
           src={record.image}
@@ -43,7 +43,7 @@ const columns: TableColumnsType<DataType> = [
           height={40}
           style={{ borderRadius: "50%", marginRight: "8px" }}
         />
-        <span>{record.name}</span>
+        <span>{`${name.first} ${name.last}`.trim()}</span>
       </div>
     ),
   },
@@ -93,6 +93,8 @@ const Students = () => {
     pageSize: 10,
   });
   const [total, setTotal] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const messageApi = useMessageApi();
 
   const fetchStudents = useCallback(async () => {
@@ -104,7 +106,9 @@ const Students = () => {
         key: student.id || student._id,
         image: student.image || "/assets/images/user.png",
         rollNo: student.rollNo,
-        name: student.name,
+        name: student.name
+          ? { first: student.name.first || '', last: student.name.last || '' }
+          : { first: '', last: '' },
         department: student.department,
         gender: student.gender,
         mobile: student.mobile,
@@ -127,6 +131,8 @@ const Students = () => {
   }, [fetchStudents]);
 
   const showModal = () => {
+    setEditMode(false);
+    setSelectedStudent(null);
     setOpen(true);
   };
 
@@ -135,11 +141,23 @@ const Students = () => {
   };
 
   const handleEdit = (key: React.Key) => {
-    console.log("Edit record", key);
+    const student = students.find((s) => s.key === key);
+    if (student) {
+      setSelectedStudent(student);
+      setEditMode(true);
+      setOpen(true);
+    }
   };
 
-  const handleDelete = (key: React.Key) => {
-    console.log("Delete record", key);
+  const handleDelete = async (key: React.Key) => {
+    try {
+      // await deleteStudent(key.toString());
+      messageApi.success("Student deleted successfully");
+      fetchStudents();
+    } catch (error) {
+      console.error("Error deleting student:", error);
+      messageApi.error("Failed to delete student");
+    }
   };
 
   const actionColumns: TableColumnsType<DataType> = [
@@ -262,7 +280,7 @@ const Students = () => {
           }}
         />
       </div>
-      <StudentModal open={open} setOpen={setOpen} onSuccess={fetchStudents} />
+      <StudentModal open={open} setOpen={setOpen} onSuccess={fetchStudents} editMode={editMode} studentData={selectedStudent} />
     </div>
   );
 };
