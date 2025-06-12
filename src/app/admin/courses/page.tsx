@@ -1,76 +1,202 @@
-import React from "react";
-import { Button, Col, Row } from "antd";
+"use client";
+import React, { useState } from "react";
+import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
+import type { TableColumnsType } from "antd";
+import {
+  ReloadOutlined,
+  SearchOutlined,
+  PlusOutlined,
+  FilterOutlined,
+} from "@ant-design/icons";
+import CourseModal from "components/Admin/CourseModal";
 
 interface CourseType {
   key: React.Key;
-  courseImage: string;
   courseName: string;
-  instructorImage: string;
   instructorName: string;
   description: string;
-  lectureDuration: string;
+  section: string;
+  courseCode: string;
 }
 
+const mockCourses: CourseType[] = Array.from({ length: 15 }).map((_, i) => ({
+  key: i,
+  courseName: `${
+    i % 3 === 0 ? "Computer Science" : i % 3 === 1 ? "Mathematics" : "Physics"
+  } ${101 + i}`,
+  instructorName: `Dr. ${i % 2 === 0 ? "John Smith" : "Jane Doe"}`,
+  description: `This course covers fundamental concepts and advanced topics in ${
+    i % 3 === 0
+      ? "programming and algorithms"
+      : i % 3 === 1
+      ? "calculus and linear algebra"
+      : "mechanics and thermodynamics"
+  }.`,
+  section: ["A", "B", "C", "D"][i % 4],
+  courseCode: `CS${101 + i}`,
+}));
+
 function Courses() {
-  const courses = Array.from({ length: 30 }).map<CourseType>((_, i) => ({
-    key: i,
-    courseImage: "/assets/images/course.png",
-    courseName: `${i % 2 === 0 ? "PHP" : "JAVA"} Development Course`, // Optional: alternate names
-    instructorImage: "/assets/images/user.png",
-    instructorName: `John ${i % 2 === 0 ? "Brown" : "Smith"}`, // Optional: alternate names
-    description:
-      "In this course, you'll explore the basic structure of a web application, and how a web browser interacts with a web server,as well as the basic syntax and data structures of the PHP language",
-    lectureDuration: "25mins",
-  }));
+  const [open, setOpen] = useState(false);
+  const [courses, setCourses] = useState<CourseType[]>(mockCourses);
+  const [loading, setLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleReload = () => {
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
+  const handleEdit = (key: React.Key) => {
+    console.log("Edit course", key);
+  };
+
+  const handleDelete = (key: React.Key) => {
+    console.log("Delete course", key);
+  };
+
+  const columns: TableColumnsType<CourseType> = [
+    {
+      title: "Course Code",
+      dataIndex: "courseCode",
+      key: "courseCode",
+      render: (text) => (
+        <span className="font-semibold text-[#2989FF]">{text}</span>
+      ),
+    },
+    {
+      title: "Course Name",
+      dataIndex: "courseName",
+      key: "courseName",
+    },
+    {
+      title: "Instructor Name",
+      dataIndex: "instructorName",
+      key: "instructorName",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => (
+        <span className="text-sm">
+          {text.length > 60 ? `${text.substring(0, 60)}...` : text}
+        </span>
+      ),
+    },
+    {
+      title: "Section",
+      dataIndex: "section",
+      key: "section",
+      render: (section: string) => <Tag color="blue">{section}</Tag>,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            className="w-auto h-auto p-0 border-0"
+            onClick={() => handleEdit(record.key)}
+          >
+            <img
+              src="/assets/icons/edit.png"
+              alt="Edit Icon"
+              width={20}
+              height={20}
+            />
+          </Button>
+          <Button
+            className="w-auto h-auto p-0 border-0"
+            onClick={() => handleDelete(record.key)}
+          >
+            <img
+              src="/assets/icons/delete.png"
+              alt="Delete Icon"
+              width={20}
+              height={20}
+            />
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div>
-      <div className="p-[20px] bg-white">
-        <span className="font-roboto text-base font-medium leading-[18.75px] text-center text-[#5B626B]">
-          All Courses
-        </span>
+      <div className="flex justify-between p-[20px] bg-[#DAE1F3]">
+        <div className="flex items-center gap-[10px]">
+          <span className="text-[#5B626B] font-roboto text-base font-medium leading-[18.75px] text-center">
+            All Courses
+          </span>
+          <Input
+            className="w-[215px] bg-white rounded-[6px]"
+            addonBefore={<SearchOutlined style={{ color: "#0000008A" }} />}
+            placeholder="Search"
+          />
+        </div>
+        <div className="flex gap-[10px]">
+          <Tooltip placement="bottom" title="Show/Hide Column">
+            <Button>
+              <FilterOutlined
+                style={{
+                  fontSize: "18px",
+                  width: "18px",
+                  height: "18px",
+                  color: "#001B3F",
+                }}
+              />
+            </Button>
+          </Tooltip>
+          <Tooltip placement="bottom" title="Add">
+            <Button onClick={showModal}>
+              <PlusOutlined
+                style={{
+                  fontSize: "18px",
+                  width: "18px",
+                  height: "18px",
+                  color: "#001B3F",
+                }}
+              />
+            </Button>
+          </Tooltip>
+          <Tooltip placement="bottom" title="Refresh">
+            <Button onClick={handleReload}>
+              <ReloadOutlined
+                style={{
+                  fontSize: "18px",
+                  width: "18px",
+                  height: "18px",
+                  color: "#001B3F",
+                }}
+              />
+            </Button>
+          </Tooltip>
+        </div>
       </div>
-      <Row className="bg-white py-[10px] px-[60px]">
-        {courses.map((course) => (
-          <Col span={6} key={course.key} className="gap-[10px] px-[8px] mb-[20px]">
-            <div className="inline-block relative w-full mb-[30px] mt-[30px] rounded-[6px] text-[#000000de] bg-white shadow-[0_2px_2px_#00000024,_0_3px_1px_-2px_#0003,_0_1px_5px_#0000001f]">
-              <div className="h-[60%] relative overflow-hidden ml-[15px] mr-[15px] mt-[-30px] rounded-[6px] shadow-[0_16px_38px_-12px_#0000008f,_0_4px_25px_#0000001f,_0_8px_10px_-5px_#0003]">
-                <img
-                  src={course.courseImage}
-                  width={245}
-                  height={182}
-                  alt="Course Image"
-                />
-              </div>
-              <div className="shadow-[0px_1px_5px_0px_#0000001F] shadow-[0px_4px_4px_0px_#00000040] rounded-[7px] p-[20px] flex flex-col gap-[25px]">
-                <div>
-                  <div className="flex items-center">
-                    <img
-                      src={course.instructorImage}
-                      alt="Profile"
-                      width={40}
-                      height={40}
-                    />
-                    <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
-                      {course.courseName}
-                    </h3>
-                  </div>
-                  <span className="font-roboto text-sm font-normal leading-[16.41px] text-left text-[#96A2B4]">
-                    {course.lectureDuration}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[10px]">
-                  <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
-                    {course.instructorName}
-                  </h3>
-                  <p>{course.description}</p>
-                </div>
-                <Button>Read More</Button>
-              </div>
-            </div>
-          </Col>
-        ))}
-      </Row>
+      <Table<CourseType>
+        rowSelection={{ type: "checkbox", columnWidth: "50px" }}
+        columns={columns}
+        dataSource={courses}
+        loading={loading}
+        pagination={{
+          position: ["bottomLeft"],
+          className: "table-pagination",
+          total: courses.length,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          pageSize: 10,
+        }}
+      />
+      <CourseModal open={open} setOpen={setOpen} />
     </div>
   );
 }
