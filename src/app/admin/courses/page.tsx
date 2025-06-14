@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import {
@@ -14,21 +14,11 @@ import { useMessageApi } from "utils";
 
 interface CourseType {
   _id: string;
-  courseName: string;
   courseCode: string;
-  instructor: {
-    _id: string;
-    userId: {
-      name: {
-        first: string;
-        last: string;
-      };
-    };
-    department: string;
-  };
+  courseName: string;
   description: string;
-  section: string;
   status: string;
+  schedules: any[];
 }
 
 function Courses() {
@@ -39,7 +29,7 @@ function Courses() {
   const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
   const messageApi = useMessageApi();
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getCourses();
@@ -50,11 +40,11 @@ function Courses() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [messageApi]);
 
   useEffect(() => {
     fetchCourses();
-  }, []);
+  }, [fetchCourses]);
 
   const showModal = () => {
     setEditMode(false);
@@ -98,22 +88,6 @@ function Courses() {
       key: "courseName",
     },
     {
-      title: "Instructor",
-      dataIndex: "instructor",
-      key: "instructor",
-      render: (instructor) => (
-        <span>
-          {instructor?.userId?.name?.first} {instructor?.userId?.name?.last}
-        </span>
-      ),
-    },
-    {
-      title: "Department",
-      dataIndex: "instructor",
-      key: "department",
-      render: (instructor) => instructor?.department,
-    },
-    {
       title: "Description",
       dataIndex: "description",
       key: "description",
@@ -122,12 +96,6 @@ function Courses() {
           {text.length > 60 ? `${text.substring(0, 60)}...` : text}
         </span>
       ),
-    },
-    {
-      title: "Section",
-      dataIndex: "section",
-      key: "section",
-      render: (section: string) => <Tag color="blue">{section}</Tag>,
     },
     {
       title: "Status",
@@ -240,9 +208,9 @@ function Courses() {
           pageSize: 10,
         }}
       />
-      <CourseModal 
-        open={open} 
-        setOpen={setOpen} 
+      <CourseModal
+        open={open}
+        setOpen={setOpen}
         onSuccess={fetchCourses}
         editMode={editMode}
         courseData={selectedCourse}
