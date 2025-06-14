@@ -15,6 +15,8 @@ interface SignUpValues {
   username: string;
   email: string;
   password: string;
+  firstName: string;
+  lastName: string;
   role?: string;
 }
 
@@ -25,7 +27,10 @@ function SignUp() {
   const handleSignUp = async (values: SignUpValues) => {
     try {
       const signupData = {
-        ...values,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        name: `${values.firstName} ${values.lastName}`,
         role: "admin",
       };
 
@@ -77,6 +82,40 @@ function SignUp() {
               borderRadius: "0.35rem",
             }}
           >
+            <Form.Item
+              name="firstName"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your first name",
+                },
+              ]}
+            >
+              <Input
+                suffix={<UserOutlined />}
+                type="text"
+                placeholder="First Name*"
+                className="bg-transparent form-control py-2"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="lastName"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your last name",
+                },
+              ]}
+            >
+              <Input
+                suffix={<UserOutlined />}
+                type="text"
+                placeholder="Last Name*"
+                className="bg-transparent form-control py-2"
+              />
+            </Form.Item>
+
             <Form.Item
               name="username"
               rules={[

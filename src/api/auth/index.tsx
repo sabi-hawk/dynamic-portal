@@ -8,9 +8,11 @@ type SignupPayload = {
   username: string;
   email: string;
   password: string;
+  name: string;
+  role?: string;
 };
 export const login = (loginData: loginPayload) =>
   API.post("/auth/login", loginData);
 
-export const register = (signUpData: any) =>
+export const register = (signUpData: SignupPayload) =>
   API.post("/auth/register", signUpData);
