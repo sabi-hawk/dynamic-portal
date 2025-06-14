@@ -1,61 +1,136 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Modal, Form, Select, Row, Col } from "antd";
 import type { FormProps } from "antd";
 import { BookOutlined, UserOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
+import { getTeachers } from "api/teacher";
+import { addCourse, updateCourse } from "api/course";
 
 const { TextArea } = Input;
+
+interface Teacher {
+  _id: string;
+  userId: {
+    name: {
+      first: string;
+      last: string;
+    };
+    email: string;
+  };
+  department: string;
+  status: string;
+}
 
 interface CourseModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSuccess?: () => void;
+  editMode?: boolean;
+  courseData?: {
+    _id: string;
+    courseCode: string;
+    courseName: string;
+    instructor: {
+      _id: string;
+      userId: {
+        name: {
+          first: string;
+          last: string;
+        };
+      };
+      department: string;
+    };
+    description: string;
+    section: string;
+    status: string;
+  } | null;
 }
 
-function CourseModal({ open, setOpen, onSuccess }: CourseModalProps) {
+function CourseModal({ open, setOpen, onSuccess, editMode = false, courseData }: CourseModalProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      fetchTeachers();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (editMode && courseData) {
+      form.setFieldsValue({
+        courseCode: courseData.courseCode,
+        courseName: courseData.courseName,
+        instructor: courseData.instructor._id,
+        description: courseData.description,
+        section: courseData.section,
+        status: courseData.status
+      });
+    }
+  }, [editMode, courseData, form]);
+
+  const fetchTeachers = async () => {
+    try {
+      setLoading(true);
+      const response = await getTeachers();
+      setTeachers(response.data);
+    } catch (error) {
+      console.error("Failed to fetch teachers:", error);
+      messageApi.error("Failed to fetch teachers");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onFinish: FormProps["onFinish"] = async (values) => {
-    console.log("Submitting Course Data:", values);
-
     try {
       setConfirmLoading(true);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const coursePayload = {
+        courseCode: values.courseCode,
+        courseName: values.courseName,
+        instructor: values.instructor,
+        description: values.description,
+        section: values.section,
+        status: values.status || "active"
+      };
 
-      messageApi.success("Course Added Successfully!");
+      if (editMode && courseData) {
+        await updateCourse(courseData._id, coursePayload);
+        messageApi.success("Course Updated Successfully!");
+      } else {
+        await addCourse(coursePayload);
+        messageApi.success("Course Added Successfully!");
+      }
+      
       form.resetFields();
       setOpen(false);
       if (onSuccess) onSuccess();
     } catch (error: any) {
-      console.error("Failed to add course:", error);
-      messageApi.error("Failed to add course. Please try again.");
+      console.error("Failed to save course:", error);
+      messageApi.error(error.response?.data?.message || `Failed to ${editMode ? 'update' : 'add'} course. Please try again.`);
     } finally {
       setConfirmLoading(false);
     }
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    form.resetFields();
     setOpen(false);
-  };
-
-  const handleChange = (value: string) => {
-    // console.log(`selected ${value}`);
   };
 
   return (
     <Modal
-      title="Add Course"
+      title={editMode ? "Edit Course" : "Add Course"}
       open={open}
       onOk={() => form.submit()}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
-      okText="Save"
+      okText={editMode ? "Update" : "Save"}
       width={600}
     >
       <Form
@@ -105,22 +180,26 @@ function CourseModal({ open, setOpen, onSuccess }: CourseModalProps) {
             </Form.Item>
           </Col>
 
-          {/* Instructor Name Field */}
+          {/* Instructor Dropdown */}
           <Col span={12}>
             <Form.Item
-              label="Instructor Name"
-              name="instructorName"
+              label="Instructor"
+              name="instructor"
               rules={[
                 {
                   required: true,
-                  message: "Please enter Instructor Name",
+                  message: "Please select an instructor",
                 },
               ]}
             >
-              <Input
-                suffix={<UserOutlined />}
-                placeholder="Instructor Name*"
-                className="custom-input"
+              <Select
+                placeholder="Select Instructor"
+                loading={loading}
+                className="custom-select"
+                options={teachers.map((teacher) => ({
+                  value: teacher._id,
+                  label: `${teacher.userId.name.first} ${teacher.userId.name.last} (${teacher.department})`,
+                }))}
               />
             </Form.Item>
           </Col>
@@ -139,7 +218,6 @@ function CourseModal({ open, setOpen, onSuccess }: CourseModalProps) {
             >
               <Select
                 placeholder="Select Section"
-                onChange={handleChange}
                 options={[
                   { value: "A", label: "A" },
                   { value: "B", label: "B" },
@@ -153,54 +231,26 @@ function CourseModal({ open, setOpen, onSuccess }: CourseModalProps) {
             </Form.Item>
           </Col>
 
-          {/* Department Dropdown */}
+          {/* Status Dropdown */}
           <Col span={12}>
             <Form.Item
-              label="Department"
-              name="department"
+              label="Status"
+              name="status"
+              initialValue="active"
               rules={[
                 {
                   required: true,
-                  message: "Please select a department",
+                  message: "Please select a status",
                 },
               ]}
             >
               <Select
-                placeholder="Select Department"
-                onChange={handleChange}
+                placeholder="Select Status"
                 options={[
-                  { value: "Computer Science", label: "Computer Science" },
-                  { value: "Mathematics", label: "Mathematics" },
-                  { value: "Physics", label: "Physics" },
-                  { value: "Chemistry", label: "Chemistry" },
-                  { value: "English", label: "English" },
-                  { value: "Electrical", label: "Electrical" },
+                  { value: "active", label: "Active" },
+                  { value: "inactive", label: "Inactive" },
                 ]}
                 className="custom-select"
-              />
-            </Form.Item>
-          </Col>
-
-          {/* Credits Field */}
-          <Col span={12}>
-            <Form.Item
-              label="Credits"
-              name="credits"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter Credits",
-                },
-                {
-                  pattern: /^[1-9][0-9]*$/,
-                  message: "Enter a valid number",
-                },
-              ]}
-            >
-              <Input
-                placeholder="Credits*"
-                className="custom-input"
-                type="number"
               />
             </Form.Item>
           </Col>

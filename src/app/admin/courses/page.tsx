@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Tag, Space, Button, Input, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import {
@@ -9,56 +9,78 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import CourseModal from "components/Admin/CourseModal";
+import { getCourses, deleteCourse } from "api/course";
+import { useMessageApi } from "utils";
 
 interface CourseType {
-  key: React.Key;
+  _id: string;
   courseName: string;
-  instructorName: string;
+  courseCode: string;
+  instructor: {
+    _id: string;
+    userId: {
+      name: {
+        first: string;
+        last: string;
+      };
+    };
+    department: string;
+  };
   description: string;
   section: string;
-  courseCode: string;
+  status: string;
 }
-
-const mockCourses: CourseType[] = Array.from({ length: 15 }).map((_, i) => ({
-  key: i,
-  courseName: `${
-    i % 3 === 0 ? "Computer Science" : i % 3 === 1 ? "Mathematics" : "Physics"
-  } ${101 + i}`,
-  instructorName: `Dr. ${i % 2 === 0 ? "John Smith" : "Jane Doe"}`,
-  description: `This course covers fundamental concepts and advanced topics in ${
-    i % 3 === 0
-      ? "programming and algorithms"
-      : i % 3 === 1
-      ? "calculus and linear algebra"
-      : "mechanics and thermodynamics"
-  }.`,
-  section: ["A", "B", "C", "D"][i % 4],
-  courseCode: `CS${101 + i}`,
-}));
 
 function Courses() {
   const [open, setOpen] = useState(false);
-  const [courses, setCourses] = useState<CourseType[]>(mockCourses);
+  const [courses, setCourses] = useState<CourseType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
+  const messageApi = useMessageApi();
+
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const response = await getCourses();
+      setCourses(response.data);
+    } catch (error) {
+      console.error("Failed to fetch courses:", error);
+      messageApi.error("Failed to fetch courses");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
   const showModal = () => {
+    setEditMode(false);
+    setSelectedCourse(null);
     setOpen(true);
   };
 
   const handleReload = () => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    fetchCourses();
   };
 
-  const handleEdit = (key: React.Key) => {
-    console.log("Edit course", key);
+  const handleEdit = (course: CourseType) => {
+    setEditMode(true);
+    setSelectedCourse(course);
+    setOpen(true);
   };
 
-  const handleDelete = (key: React.Key) => {
-    console.log("Delete course", key);
+  const handleDelete = async (courseId: string) => {
+    try {
+      await deleteCourse(courseId);
+      messageApi.success("Course deleted successfully");
+      fetchCourses();
+    } catch (error) {
+      console.error("Failed to delete course:", error);
+      messageApi.error("Failed to delete course");
+    }
   };
 
   const columns: TableColumnsType<CourseType> = [
@@ -76,9 +98,20 @@ function Courses() {
       key: "courseName",
     },
     {
-      title: "Instructor Name",
-      dataIndex: "instructorName",
-      key: "instructorName",
+      title: "Instructor",
+      dataIndex: "instructor",
+      key: "instructor",
+      render: (instructor) => (
+        <span>
+          {instructor?.userId?.name?.first} {instructor?.userId?.name?.last}
+        </span>
+      ),
+    },
+    {
+      title: "Department",
+      dataIndex: "instructor",
+      key: "department",
+      render: (instructor) => instructor?.department,
     },
     {
       title: "Description",
@@ -97,13 +130,23 @@ function Courses() {
       render: (section: string) => <Tag color="blue">{section}</Tag>,
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <Tag color={status === "active" ? "green" : "red"}>
+          {status.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
           <Button
             className="w-auto h-auto p-0 border-0"
-            onClick={() => handleEdit(record.key)}
+            onClick={() => handleEdit(record)}
           >
             <img
               src="/assets/icons/edit.png"
@@ -114,7 +157,7 @@ function Courses() {
           </Button>
           <Button
             className="w-auto h-auto p-0 border-0"
-            onClick={() => handleDelete(record.key)}
+            onClick={() => handleDelete(record._id)}
           >
             <img
               src="/assets/icons/delete.png"
@@ -185,6 +228,7 @@ function Courses() {
         columns={columns}
         dataSource={courses}
         loading={loading}
+        rowKey="_id"
         pagination={{
           position: ["bottomLeft"],
           className: "table-pagination",
@@ -196,7 +240,13 @@ function Courses() {
           pageSize: 10,
         }}
       />
-      <CourseModal open={open} setOpen={setOpen} />
+      <CourseModal 
+        open={open} 
+        setOpen={setOpen} 
+        onSuccess={fetchCourses}
+        editMode={editMode}
+        courseData={selectedCourse}
+      />
     </div>
   );
 }
