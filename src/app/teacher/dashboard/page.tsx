@@ -1,14 +1,49 @@
 "use client";
 import { Col, Row, Table } from "antd";
 import type { TableProps } from "antd";
+import { useState, useEffect } from "react";
+import { useAppState } from "hooks";
+import {
+  getTeacherByUserId,
+  getTeacherCoursesAndSchedules,
+  getTeacherTodaySchedules,
+} from "api/teacher";
 
 interface LectureType {
   key: string;
   subjectName: string;
-  class: string;
+  section: string;
   time: string;
   duration: string;
   details: string;
+}
+
+interface TeacherData {
+  _id: string;
+  userId: {
+    name: {
+      first: string;
+      last: string;
+    };
+    email: string;
+  };
+  department: string;
+}
+
+interface ScheduleData {
+  _id: string;
+  course: {
+    courseCode: string;
+    courseName: string;
+    description: string;
+  };
+  section: string;
+  schedule: {
+    startTime: string;
+    endTime: string;
+    duration: number;
+    daysOfWeek: string[];
+  };
 }
 
 const columns: TableProps<LectureType>["columns"] = [
@@ -31,9 +66,9 @@ const columns: TableProps<LectureType>["columns"] = [
     ),
   },
   {
-    title: <span className="text-[#666666] font-normal text-sm">Class</span>,
-    dataIndex: "class",
-    key: "class",
+    title: <span className="text-[#666666] font-normal text-sm">Section</span>,
+    dataIndex: "section",
+    key: "section",
     render: (text) => (
       <span className="text-[#444444] font-normal text-sm">{text}</span>
     ),
@@ -68,93 +103,74 @@ const columns: TableProps<LectureType>["columns"] = [
 ];
 
 function Dashboard() {
-  const todaysLectures = [
-    {
-      subject: "Chemistry",
-      time: "M-W-F",
-      icon: "/assets/images/Chemistry.svg",
-    },
-    { subject: "Business", time: "M-W-F", icon: "/assets/images/Buisness.svg" },
-    {
-      subject: "Mathematics",
-      time: "M-W-F",
-      icon: "/assets/images/Mathematics.svg",
-    },
-    { subject: "Painting", time: "M-W-F", icon: "/assets/images/Painting.svg" },
-    { subject: "Physics", time: "T-T-S", icon: "/assets/images/Chemistry.svg" },
-    {
-      subject: "English",
-      time: "M-W-F",
-      icon: "/assets/images/Mathematics.svg",
-    },
-    { subject: "History", time: "T-T-S", icon: "/assets/images/Buisness.svg" },
-    {
-      subject: "Mathematics",
-      time: "M-W-F",
-      icon: "/assets/images/Mathematics.svg",
-    },
-    { subject: "Painting", time: "M-W-F", icon: "/assets/images/Painting.svg" },
-    { subject: "Physics", time: "T-T-S", icon: "/assets/images/Chemistry.svg" },
-  ];
+  const {
+    auth: { user },
+  } = useAppState();
+  const [teacherData, setTeacherData] = useState<TeacherData | null>(null);
+  const [todaysLectures, setTodaysLectures] = useState<ScheduleData[]>([]);
+  const [weeklyLectures, setWeeklyLectures] = useState<LectureType[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const weeklyLecturesData: LectureType[] = [
-    {
-      key: "1",
-      subjectName: "Chemistry",
-      class: "7A",
-      time: "09:30 am",
-      duration: "2 hours",
-      details: "/assets/icons/details.png",
-    },
-    {
-      key: "2",
-      subjectName: "Mathematics",
-      class: "7A",
-      time: "11:30 am",
-      duration: "2 hours",
-      details: "/assets/icons/details.png",
-    },
-    {
-      key: "3",
-      subjectName: "Physics",
-      class: "8B",
-      time: "02:00 pm",
-      duration: "1.5 hours",
-      details: "/assets/icons/details.png",
-    },
-    {
-      key: "4",
-      subjectName: "English",
-      class: "6C",
-      time: "10:00 am",
-      duration: "1 hour",
-      details: "/assets/icons/details.png",
-    },
-    {
-      key: "5",
-      subjectName: "History",
-      class: "8A",
-      time: "01:00 pm",
-      duration: "1.5 hours",
-      details: "/assets/icons/details.png",
-    },
-    {
-      key: "6",
-      subjectName: "Business",
-      class: "9A",
-      time: "03:30 pm",
-      duration: "2 hours",
-      details: "/assets/icons/details.png",
-    },
-    {
-      key: "7",
-      subjectName: "Painting",
-      class: "7B",
-      time: "04:00 pm",
-      duration: "1 hour",
-      details: "/assets/icons/details.png",
-    },
-  ];
+  useEffect(() => {
+    if (user?._id) {
+      fetchTeacherData();
+    }
+  }, [user]);
+
+  const fetchTeacherData = async () => {
+    try {
+      setLoading(true);
+      // Get teacher profile
+      const teacherRes = await getTeacherByUserId(user!._id);
+      setTeacherData(teacherRes.data);
+
+      // Get teacher's courses and schedules
+      const coursesRes = await getTeacherCoursesAndSchedules(
+        teacherRes.data._id
+      );
+      const todayRes = await getTeacherTodaySchedules(teacherRes.data._id);
+
+      setTodaysLectures(todayRes.data);
+
+      // Format weekly lectures data
+      const weeklyData = coursesRes.data.map(
+        (schedule: ScheduleData, index: number) => ({
+          key: (index + 1).toString(),
+          subjectName: schedule.course.courseName,
+          section: schedule.section,
+          time: `${schedule.schedule.startTime} - ${schedule.schedule.endTime}`,
+          duration: `${schedule.schedule.duration} mins`,
+          details: "/assets/icons/details.png",
+        })
+      );
+
+      setWeeklyLectures(weeklyData);
+    } catch (error) {
+      console.error("Failed to fetch teacher data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSubjectIcon = (subjectName: string) => {
+    // Map subject names to icons (you can expand this)
+    const iconMap: { [key: string]: string } = {
+      Chemistry: "/assets/images/Chemistry.svg",
+      Business: "/assets/images/Buisness.svg",
+      Mathematics: "/assets/images/Mathematics.svg",
+      Painting: "/assets/images/Painting.svg",
+      Physics: "/assets/images/Chemistry.svg",
+      English: "/assets/images/Mathematics.svg",
+      History: "/assets/images/Buisness.svg",
+    };
+    return iconMap[subjectName] || "/assets/images/Chemistry.svg";
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">Loading...</div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 p-6">
@@ -178,7 +194,9 @@ function Dashboard() {
                   Welcome Back
                 </h2>
                 <h1 className="text-4xl font-bold text-[#2989FF] mb-4">
-                  Jon Doe!
+                  {teacherData
+                    ? `${teacherData.userId.name.first} ${teacherData.userId.name.last}!`
+                    : "Teacher!"}
                 </h1>
                 <p className="text-gray-600 text-[15px] leading-relaxed">
                   Here's the overview of your today's lecture and a glance at
@@ -201,26 +219,32 @@ function Dashboard() {
               Today's Lectures
             </h3>
             <div className="flex flex-col gap-4">
-              {todaysLectures.map((lecture, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center px-8 py-1"
-                >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={lecture.icon}
-                      alt={lecture.subject}
-                      className="w-5 h-5"
-                    />
+              {todaysLectures.length > 0 ? (
+                todaysLectures.map((lecture, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center px-8 py-1"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={getSubjectIcon(lecture.course.courseName)}
+                        alt={lecture.course.courseName}
+                        className="w-5 h-5"
+                      />
+                      <span className="text-sm font-normal text-[#444444]">
+                        {lecture.course.courseName}
+                      </span>
+                    </div>
                     <span className="text-sm font-normal text-[#444444]">
-                      {lecture.subject}
+                      {lecture.schedule.startTime}
                     </span>
                   </div>
-                  <span className="text-sm font-normal text-[#444444]">
-                    {lecture.time}
-                  </span>
+                ))
+              ) : (
+                <div className="text-center text-gray-500 py-4">
+                  No lectures scheduled for today
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </Col>
@@ -232,8 +256,9 @@ function Dashboard() {
             </h3>
             <Table<LectureType>
               columns={columns}
-              dataSource={weeklyLecturesData}
+              dataSource={weeklyLectures}
               pagination={false}
+              loading={loading}
             />
           </div>
         </Col>

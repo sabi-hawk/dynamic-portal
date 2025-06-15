@@ -9,7 +9,12 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import CourseModal from "components/Admin/CourseModal";
-import { getCourses, deleteCourse } from "api/course";
+import {
+  getCourses,
+  deleteCourse,
+  getCourseById,
+  getCourseSchedules,
+} from "api/course";
 import { useMessageApi } from "utils";
 
 interface CourseType {
@@ -56,10 +61,22 @@ function Courses() {
     fetchCourses();
   };
 
-  const handleEdit = (course: CourseType) => {
+  const handleEdit = async (course: CourseType) => {
     setEditMode(true);
-    setSelectedCourse(course);
-    setOpen(true);
+    setLoading(true);
+    try {
+      // Fetch the latest course data and its schedules
+      const [courseRes, schedulesRes] = await Promise.all([
+        getCourseById(course._id),
+        getCourseSchedules(course._id),
+      ]);
+      setSelectedCourse({ ...courseRes.data, schedules: schedulesRes.data });
+      setOpen(true);
+    } catch (error) {
+      messageApi.error("Failed to fetch course details for editing");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (courseId: string) => {

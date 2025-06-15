@@ -4,8 +4,8 @@ import type { TableProps } from "antd";
 import React, { useEffect, useState } from "react";
 import { Column } from "@ant-design/plots";
 import { getStudents } from "../../../api/student";
-import { getTeachers } from "../../../api/teacher";
 import { getCourses } from "../../../api/course";
+import { getTeachers } from "api/teacher";
 
 interface DataType {
   key: string;

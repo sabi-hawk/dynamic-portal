@@ -4,9 +4,9 @@ import { Input, Modal, Form, Select, DatePicker, Row, Col } from "antd";
 import type { FormProps } from "antd";
 import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useMessageApi } from "utils";
-import { addTeacher, updateTeacher } from "api/teacher";
 import { register } from "api/auth";
 import dayjs from "dayjs";
+import { updateTeacher } from "api/teacher";
 
 interface TeacherModalProps {
   open: boolean;
@@ -16,7 +16,13 @@ interface TeacherModalProps {
   teacherData?: any;
 }
 
-function TeacherModal({ open, setOpen, onSuccess, editMode = false, teacherData }: TeacherModalProps) {
+function TeacherModal({
+  open,
+  setOpen,
+  onSuccess,
+  editMode = false,
+  teacherData,
+}: TeacherModalProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const messageApi = useMessageApi();
@@ -26,7 +32,9 @@ function TeacherModal({ open, setOpen, onSuccess, editMode = false, teacherData 
     if (editMode && teacherData) {
       form.setFieldsValue({
         ...teacherData,
-        joiningDate: teacherData.joiningDate ? dayjs(teacherData.joiningDate) : undefined,
+        joiningDate: teacherData.joiningDate
+          ? dayjs(teacherData.joiningDate)
+          : undefined,
       });
     }
   }, [editMode, teacherData, form]);
@@ -58,7 +66,9 @@ function TeacherModal({ open, setOpen, onSuccess, editMode = false, teacherData 
       if (onSuccess) onSuccess();
     } catch (error: any) {
       console.error("Failed to save teacher:", error);
-      messageApi.error(`Failed to ${editMode ? 'update' : 'add'} teacher. Please try again.`);
+      messageApi.error(
+        `Failed to ${editMode ? "update" : "add"} teacher. Please try again.`
+      );
     } finally {
       setConfirmLoading(false);
     }
@@ -229,7 +239,6 @@ function TeacherModal({ open, setOpen, onSuccess, editMode = false, teacherData 
               />
             </Form.Item>
           </Col>
-          
 
           {/* Email Field */}
           <Col span={8}>
@@ -267,7 +276,11 @@ function TeacherModal({ open, setOpen, onSuccess, editMode = false, teacherData 
               ]}
             >
               <Input.Password
-                placeholder={editMode ? "Leave blank to keep current password" : "Password*"}
+                placeholder={
+                  editMode
+                    ? "Leave blank to keep current password"
+                    : "Password*"
+                }
                 className="custom-input"
               />
             </Form.Item>

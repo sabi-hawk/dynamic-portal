@@ -10,9 +10,9 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import TeacherModal from "components/Admin/TeacherModal";
-import { getTeachers, deleteTeacher } from "api/teacher";
 import { useMessageApi } from "utils";
 import axios from "axios";
+import { deleteTeacher, getTeachers } from "api/teacher";
 
 interface DataType {
   _id: React.Key;
@@ -52,8 +52,8 @@ const Staff = () => {
         _id: teacher.id || teacher._id,
         image: teacher.image || "/assets/images/user.png",
         name: teacher.name
-          ? { first: teacher.name.first || '', last: teacher.name.last || '' }
-          : { first: '', last: '' },
+          ? { first: teacher.name.first || "", last: teacher.name.last || "" }
+          : { first: "", last: "" },
         department: teacher.department,
         role: teacher.role || "Teacher",
         section: teacher.section || "N/A",
@@ -294,9 +294,9 @@ const Staff = () => {
           }}
         />
       </div>
-      <TeacherModal 
-        open={open} 
-        setOpen={setOpen} 
+      <TeacherModal
+        open={open}
+        setOpen={setOpen}
         onSuccess={fetchTeachers}
         editMode={editMode}
         teacherData={selectedTeacher}

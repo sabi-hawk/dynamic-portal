@@ -7,6 +7,7 @@ import { useMessageApi } from "utils";
 import { getTeachers } from "api/teacher";
 import { addCourse, updateCourse } from "api/course";
 import CourseScheduleField from "./CourseScheduleField";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -66,7 +67,17 @@ function CourseModal({
         courseName: courseData.courseName,
         description: courseData.description,
         status: courseData.status,
-        schedules: courseData.schedules || [],
+        schedules: (courseData.schedules || []).map((s: any) => ({
+          instructor: s.instructor,
+          section: s.section,
+          startTime: s.schedule?.startTime
+            ? dayjs(s.schedule.startTime, "HH:mm")
+            : null,
+          endTime: s.schedule?.endTime
+            ? dayjs(s.schedule.endTime, "HH:mm")
+            : null,
+          daysOfWeek: s.schedule?.daysOfWeek,
+        })),
       });
     } else {
       form.resetFields();
