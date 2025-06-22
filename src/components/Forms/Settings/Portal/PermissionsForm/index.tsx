@@ -25,8 +25,8 @@ import {
   MailOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
-import { getPortalSettings } from "api/settings";
-import type { FormInstance } from 'antd/es/form';
+import { getPortalSettings, getPortalFeatures } from "api/settings";
+import type { FormInstance } from "antd/es/form";
 
 const { Title, Text } = Typography;
 
@@ -36,26 +36,31 @@ interface PermissionsFormProps {
 
 const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
   const instituteType = Form.useWatch("instituteType", form) || "school";
-  const teacherPortalEnabled = Form.useWatch(["portalPermissions", "teacherPortal", "enabled"], form);
-  const studentPortalEnabled = Form.useWatch(["portalPermissions", "studentPortal", "enabled"], form);
+  const teacherPortalEnabled = Form.useWatch(
+    ["portalPermissions", "teacherPortal", "enabled"],
+    form
+  );
+  const studentPortalEnabled = Form.useWatch(
+    ["portalPermissions", "studentPortal", "enabled"],
+    form
+  );
 
-  const getFeaturesByType = (type: string) => {
-    const baseFeatures = {
-      school: {
-        teacher: ["dashboard", "attendance", "assignments", "grades", "schedule", "communication", "reports", "profile"],
-        student: ["dashboard", "attendance", "assignments", "grades", "schedule", "communication", "profile"],
-      },
-      college: {
-        teacher: ["dashboard", "attendance", "assignments", "grades", "schedule", "communication", "reports", "profile", "research", "publications"],
-        student: ["dashboard", "attendance", "assignments", "grades", "schedule", "communication", "profile", "projects", "internships"],
-      },
-      university: {
-        teacher: ["dashboard", "attendance", "assignments", "grades", "schedule", "communication", "reports", "profile", "research", "publications", "conferences", "grants"],
-        student: ["dashboard", "attendance", "assignments", "grades", "schedule", "communication", "profile", "projects", "internships", "research", "thesis"],
-      },
+  const [featureOptions, setFeatureOptions] = useState<{
+    teacher: string[];
+    student: string[];
+  }>({ teacher: [], student: [] });
+
+  useEffect(() => {
+    const fetchFeatures = async () => {
+      try {
+        const res = await getPortalFeatures(instituteType);
+        setFeatureOptions(res.data);
+      } catch (e) {
+        console.error(e);
+      }
     };
-    return baseFeatures[type as keyof typeof baseFeatures] || baseFeatures.school;
-  };
+    fetchFeatures();
+  }, [instituteType]);
 
   const featureLabels = {
     dashboard: { label: "Dashboard", icon: <DashboardOutlined /> },
@@ -73,6 +78,17 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
     conferences: { label: "Conferences", icon: <TrophyOutlined /> },
     grants: { label: "Grants & Funding", icon: <BarChartOutlined /> },
     thesis: { label: "Thesis Management", icon: <FileTextOutlined /> },
+    lectures: { label: "Lectures", icon: <CalendarOutlined /> },
+    leaves: { label: "Leave Requests", icon: <TeamOutlined /> },
+    "course-material": {
+      label: "Course Materials",
+      icon: <FileTextOutlined />,
+    },
+    settings: { label: "Settings", icon: <SettingOutlined /> },
+    courses: { label: "Courses", icon: <BookOutlined /> },
+    grade: { label: "Grades", icon: <BarChartOutlined /> },
+    announcements: { label: "Announcements", icon: <FileTextOutlined /> },
+    submission: { label: "Submission", icon: <FileTextOutlined /> },
   };
 
   useEffect(() => {
@@ -92,14 +108,15 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
     };
     fetchSettings();
   }, [form]);
-  
-  const features = getFeaturesByType(instituteType);
+
+  const features = featureOptions;
 
   return (
     <Col span={24} className="px-[30px] py-[10px]">
       <Title level={4}>Portal Access Rights</Title>
       <Text type="secondary">
-        Configure which portals are enabled and what features are available for each user type.
+        Configure which portals are enabled and what features are available for
+        each user type.
       </Text>
 
       <Divider />
@@ -124,7 +141,8 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
           </Col>
           <Col span={18}>
             <Text type="secondary">
-              Admin portal is always enabled and has access to all features for managing the institute.
+              Admin portal is always enabled and has access to all features for
+              managing the institute.
             </Text>
           </Col>
         </Row>
@@ -142,7 +160,10 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
       >
         <Row gutter={16} align="middle" style={{ marginBottom: 16 }}>
           <Col span={6}>
-            <Form.Item name={["portalPermissions", "teacherPortal", "enabled"]} valuePropName="checked">
+            <Form.Item
+              name={["portalPermissions", "teacherPortal", "enabled"]}
+              valuePropName="checked"
+            >
               <Switch />
             </Form.Item>
           </Col>
@@ -150,23 +171,34 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
             <Text strong>Enable Teacher Portal</Text>
             <br />
             <Text type="secondary">
-              Allow teachers to access their dedicated portal with selected features.
+              Allow teachers to access their dedicated portal with selected
+              features.
             </Text>
           </Col>
         </Row>
 
         {teacherPortalEnabled && (
           <div style={{ marginTop: 16 }}>
-            <Text strong>Available Features for Teachers ({instituteType}):</Text>
-            <Form.Item name={["portalPermissions", "teacherPortal", "features"]}>
+            <Text strong>
+              Available Features for Teachers ({instituteType}):
+            </Text>
+            <Form.Item
+              name={["portalPermissions", "teacherPortal", "features"]}
+            >
               <Checkbox.Group style={{ width: "100%" }}>
                 <Row gutter={[16, 8]} style={{ marginTop: 8 }}>
                   {features.teacher.map((feature) => (
                     <Col span={8} key={feature}>
                       <Checkbox value={feature}>
                         <Space>
-                          {featureLabels[feature as keyof typeof featureLabels]?.icon}
-                          {featureLabels[feature as keyof typeof featureLabels]?.label}
+                          {
+                            featureLabels[feature as keyof typeof featureLabels]
+                              ?.icon
+                          }
+                          {
+                            featureLabels[feature as keyof typeof featureLabels]
+                              ?.label
+                          }
                         </Space>
                       </Checkbox>
                     </Col>
@@ -190,7 +222,10 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
       >
         <Row gutter={16} align="middle" style={{ marginBottom: 16 }}>
           <Col span={6}>
-            <Form.Item name={["portalPermissions", "studentPortal", "enabled"]} valuePropName="checked">
+            <Form.Item
+              name={["portalPermissions", "studentPortal", "enabled"]}
+              valuePropName="checked"
+            >
               <Switch />
             </Form.Item>
           </Col>
@@ -198,23 +233,34 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
             <Text strong>Enable Student Portal</Text>
             <br />
             <Text type="secondary">
-              Allow students to access their dedicated portal with selected features.
+              Allow students to access their dedicated portal with selected
+              features.
             </Text>
           </Col>
         </Row>
 
         {studentPortalEnabled && (
           <div style={{ marginTop: 16 }}>
-            <Text strong>Available Features for Students ({instituteType}):</Text>
-            <Form.Item name={["portalPermissions", "studentPortal", "features"]}>
+            <Text strong>
+              Available Features for Students ({instituteType}):
+            </Text>
+            <Form.Item
+              name={["portalPermissions", "studentPortal", "features"]}
+            >
               <Checkbox.Group style={{ width: "100%" }}>
                 <Row gutter={[16, 8]} style={{ marginTop: 8 }}>
                   {features.student.map((feature) => (
                     <Col span={8} key={feature}>
                       <Checkbox value={feature}>
                         <Space>
-                          {featureLabels[feature as keyof typeof featureLabels]?.icon}
-                          {featureLabels[feature as keyof typeof featureLabels]?.label}
+                          {
+                            featureLabels[feature as keyof typeof featureLabels]
+                              ?.icon
+                          }
+                          {
+                            featureLabels[feature as keyof typeof featureLabels]
+                              ?.label
+                          }
                         </Space>
                       </Checkbox>
                     </Col>

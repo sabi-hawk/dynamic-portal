@@ -20,3 +20,6 @@ export const updatePortalSettings = (payload: FormData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const getPortalFeatures = (instituteType: string) =>
+  API.get(`/settings/features?instituteType=${instituteType}`);
