@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import Layout from "components/Layouts/index";
@@ -7,7 +7,7 @@ import { MessageProvider } from "utils";
 import StateProvider from "providers/StateProvider";
 import { PersistGate } from "redux-persist/integration/react";
 import { persister } from "flux/store";
-
+import QueryProvider from "providers/QueryProvider";
 
 export default function RootLayout({
   children,
@@ -22,12 +22,13 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body
-      >
+      <body>
         <StateProvider>
           <PersistGate loading={<div>Loading...</div>} persistor={persister}>
             <MessageProvider>
-              <Layout>{children}</Layout>
+              <QueryProvider>
+                <Layout>{children}</Layout>
+              </QueryProvider>
             </MessageProvider>
           </PersistGate>
         </StateProvider>

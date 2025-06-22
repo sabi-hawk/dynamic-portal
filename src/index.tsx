@@ -6,6 +6,7 @@ import { persister } from "./flux/store";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import { MessageProvider } from "utils";
+import QueryProvider from "./providers/QueryProvider";
 
 // @ts-ignore
 const appRoot = ReactDOM.createRoot(document.getElementById("root"));
@@ -15,7 +16,9 @@ appRoot.render(
     <PersistGate persistor={persister}>
       <BrowserRouter>
         <MessageProvider>
-          <App />
+          <QueryProvider>
+            <App />
+          </QueryProvider>
         </MessageProvider>
       </BrowserRouter>
     </PersistGate>

@@ -22,6 +22,7 @@ import TeacherLectures from "app/teacher/lectures/page";
 import TeacherLeaves from "app/teacher/leaves/page";
 import TeacherAttendance from "app/teacher/attendance/page";
 import TeacherGrade from "app/teacher/grade/page";
+import CourseDetail from "app/teacher/course/detail";
 import TeacherSettings from "app/teacher/settings/page";
 import TeacherLayout from "components/Layouts/Teacher";
 
@@ -52,6 +53,7 @@ const roleRoutes = {
     { path: "dashboard", component: TeacherDashboard },
     { path: "assignments", component: TeacherAssignments },
     { path: "lectures", component: TeacherLectures },
+    { path: "course/:scheduleId", component: CourseDetail },
     { path: "leaves", component: TeacherLeaves },
     { path: "attendance", component: TeacherAttendance },
     { path: "grade", component: TeacherGrade },
