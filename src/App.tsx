@@ -17,11 +17,11 @@ import AdminLayout from "components/Layouts/Admin";
 
 // Teacher routes
 import TeacherDashboard from "app/teacher/dashboard/page";
-import TeacherAssignments from "app/teacher/assignments/page";
+import TeacherNotification from "app/teacher/notification/page";
 import TeacherLectures from "app/teacher/lectures/page";
 import TeacherLeaves from "app/teacher/leaves/page";
-import TeacherAttendance from "app/teacher/attendance/page";
-import TeacherGrade from "app/teacher/grade/page";
+import TeacherTimeTable from "app/teacher/time-table/page";
+import TeacherProfile from "app/teacher/profile/page";
 import CourseDetail from "app/teacher/course/detail";
 import TeacherSettings from "app/teacher/settings/page";
 import TeacherLayout from "components/Layouts/Teacher";
@@ -51,12 +51,12 @@ const roleRoutes = {
   ],
   teacher: [
     { path: "dashboard", component: TeacherDashboard },
-    { path: "assignments", component: TeacherAssignments },
+    { path: "notification", component: TeacherNotification },
     { path: "lectures", component: TeacherLectures },
     { path: "course/:scheduleId", component: CourseDetail },
     { path: "leaves", component: TeacherLeaves },
-    { path: "attendance", component: TeacherAttendance },
-    { path: "grade", component: TeacherGrade },
+    { path: "time-table", component: TeacherTimeTable },
+    { path: "profile", component: TeacherProfile },
     { path: "settings", component: TeacherSettings },
   ],
   student: [

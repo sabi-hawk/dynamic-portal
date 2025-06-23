@@ -25,11 +25,8 @@ export const updateTeacher = (id: string, payload: Partial<TeacherPayload>) =>
   API.put(`/teacher/${id}`, payload);
 
 // New functions for teacher dashboard
-export const getTeacherByUserId = (userId: string) =>
-  API.get(`/teacher/user/${userId}`);
+export const getTeacherByUserId = () => API.get(`/teacher/profile`);
 
-export const getTeacherCoursesAndSchedules = () =>
-  API.get(`/teacher/courses`);
+export const getTeacherCoursesAndSchedules = () => API.get(`/teacher/courses`);
 
-export const getTeacherTodaySchedules = () =>
-  API.get(`/teacher/today`);
+export const getTeacherTodaySchedules = () => API.get(`/teacher/today`);

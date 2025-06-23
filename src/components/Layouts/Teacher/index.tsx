@@ -31,6 +31,19 @@ const items: MenuItem[] = [
     label: <a href="/teacher/dashboard">Dashboard</a>,
   },
   {
+    key: "profile",
+    icon: (
+      <img
+        className="w-[13px] h-[13px]"
+        height={13}
+        width={13}
+        src="/assets/icons/assignments.svg"
+        alt="Dashboard Icon"
+      />
+    ),
+    label: <a href="/teacher/profile">Profile</a>,
+  },
+  {
     key: "lectures",
     icon: (
       <img
@@ -57,7 +70,7 @@ const items: MenuItem[] = [
     label: <a href="/teacher/leaves">Leaves Requests</a>,
   },
   {
-    key: "assignments",
+    key: "notification",
     icon: (
       <img
         className="w-[13px] h-[13px]"
@@ -67,10 +80,10 @@ const items: MenuItem[] = [
         alt="Dashboard Icon"
       />
     ),
-    label: <a href="/teacher/assignments">Assignments</a>,
+    label: <a href="/teacher/notification">Notification</a>,
   },
   {
-    key: "attendance",
+    key: "time-table",
     icon: (
       <img
         className="w-[13px] h-[13px]"
@@ -80,21 +93,9 @@ const items: MenuItem[] = [
         alt="Dashboard Icon"
       />
     ),
-    label: <a href="/teacher/attendance">Attendance</a>,
+    label: <a href="/teacher/time-table">Time Table</a>,
   },
-  {
-    key: "grade",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/grade.svg"
-        alt="Dashboard Icon"
-      />
-    ),
-    label: <a href="/teacher/grade">Grade</a>,
-  },
+
   {
     key: "settings",
     icon: (

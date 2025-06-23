@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { Input, Modal, Form, Select, DatePicker, Row, Col } from "antd";
 import type { FormProps } from "antd";
-import { UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+} from "@ant-design/icons";
 import { useMessageApi } from "utils";
 import { register } from "api/auth";
 import dayjs from "dayjs";
@@ -240,6 +245,29 @@ function TeacherModal({
             </Form.Item>
           </Col>
 
+          {/* Emergency Contact Field */}
+
+          <Col span={8}>
+            <Form.Item label="Emergency Contact" name="emergencyContact">
+              <Input
+                suffix={<PhoneOutlined />}
+                placeholder="Emergency Contact"
+                className="custom-input"
+              />
+            </Form.Item>
+          </Col>
+
+          {/* Address Field */}
+
+          <Col span={8}>
+            <Form.Item label="Address" name="address">
+              <Input
+                suffix={<HomeOutlined />}
+                placeholder="Address"
+                className="custom-input"
+              />
+            </Form.Item>
+          </Col>
           {/* Email Field */}
           <Col span={8}>
             <Form.Item

@@ -58,6 +58,7 @@ const Staff = () => {
         role: teacher.role || "Teacher",
         section: teacher.section || "N/A",
         mobile: teacher.mobile,
+        emergencyContact: teacher.emergencyContact,
         email: teacher.email,
         address: teacher.address || "N/A",
         status: teacher.status || "Active",

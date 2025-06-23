@@ -15,11 +15,11 @@ import Settings from "app/admin/settings/page";
 import AdminLayout from "components/Layouts/Admin";
 
 import TeacherDashboard from "app/teacher/dashboard/page";
-import TeacherAssignments from "app/teacher/assignments/page";
+import TeacherAssignments from "app/teacher/notification/page";
 import TeacherLectures from "app/teacher/lectures/page";
 import TeacherLeaves from "app/teacher/leaves/page";
-import TeacherAttendance from "app/teacher/attendance/page";
-import TeacherGrade from "app/teacher/grade/page";
+import TeacherAttendance from "app/teacher/time-table/page";
+import TeacherGrade from "app/teacher/profile/page";
 import TeacherSettings from "app/teacher/settings/page";
 import TeacherLayout from "components/Layouts/Teacher";
 
