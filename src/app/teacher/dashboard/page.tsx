@@ -106,10 +106,9 @@ function Dashboard() {
   const {
     auth: { user },
   } = useAppState();
-  const [teacherData, setTeacherData] = useState<TeacherData | null>(null);
   const [todaysLectures, setTodaysLectures] = useState<ScheduleData[]>([]);
   const [weeklyLectures, setWeeklyLectures] = useState<LectureType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user?._id) {
@@ -120,15 +119,10 @@ function Dashboard() {
   const fetchTeacherData = async () => {
     try {
       setLoading(true);
-      // Get teacher profile
-      const teacherRes = await getTeacherByUserId(user!._id);
-      setTeacherData(teacherRes.data);
 
       // Get teacher's courses and schedules
-      const coursesRes = await getTeacherCoursesAndSchedules(
-        teacherRes.data._id
-      );
-      const todayRes = await getTeacherTodaySchedules(teacherRes.data._id);
+      const coursesRes = await getTeacherCoursesAndSchedules();
+      const todayRes = await getTeacherTodaySchedules();
 
       setTodaysLectures(todayRes.data);
 
@@ -194,8 +188,8 @@ function Dashboard() {
                   Welcome Back
                 </h2>
                 <h1 className="text-4xl font-bold text-[#2989FF] mb-4">
-                  {teacherData
-                    ? `${teacherData.userId.name.first} ${teacherData.userId.name.last}!`
+                  {user
+                    ? `${user?.name.first} ${user?.name.last}!`
                     : "Teacher!"}
                 </h1>
                 <p className="text-gray-600 text-[15px] leading-relaxed">

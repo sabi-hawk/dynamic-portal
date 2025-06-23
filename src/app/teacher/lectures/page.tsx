@@ -40,7 +40,7 @@ function Lectures() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["teacher-courses", teacherId],
     queryFn: () =>
-      getTeacherCoursesAndSchedules(teacherId).then((res) => res.data),
+      getTeacherCoursesAndSchedules().then((res) => res.data),
     enabled: !!teacherId,
   });
 

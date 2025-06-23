@@ -28,8 +28,8 @@ export const updateTeacher = (id: string, payload: Partial<TeacherPayload>) =>
 export const getTeacherByUserId = (userId: string) =>
   API.get(`/teacher/user/${userId}`);
 
-export const getTeacherCoursesAndSchedules = (teacherId: string) =>
-  API.get(`/teacher/${teacherId}/courses`);
+export const getTeacherCoursesAndSchedules = () =>
+  API.get(`/teacher/courses`);
 
-export const getTeacherTodaySchedules = (teacherId: string) =>
-  API.get(`/teacher/${teacherId}/today`);
+export const getTeacherTodaySchedules = () =>
+  API.get(`/teacher/today`);
