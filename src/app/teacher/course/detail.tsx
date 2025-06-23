@@ -47,18 +47,18 @@ function CourseDetail() {
             children: <CourseMaterialsTab scheduleId={scheduleId as string} />,
           },
           {
-            key: "assignments",
-            label: "Assignments",
+            key: "submissions",
+            label: "Submissions",
+            children: <div>Coming Soon...</div>,
+          },
+          {
+            key: "attendance",
+            label: "Attendance",
             children: <div>Coming Soon...</div>,
           },
           {
             key: "grades",
             label: "Grades",
-            children: <div>Coming Soon...</div>,
-          },
-          {
-            key: "submissions",
-            label: "Submissions",
             children: <div>Coming Soon...</div>,
           },
         ]}
