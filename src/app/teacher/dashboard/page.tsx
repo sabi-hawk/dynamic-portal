@@ -4,7 +4,6 @@ import type { TableProps } from "antd";
 import { useState, useEffect } from "react";
 import { useAppState } from "hooks";
 import {
-  getTeacherByUserId,
   getTeacherCoursesAndSchedules,
   getTeacherTodaySchedules,
 } from "api/teacher";
@@ -16,18 +15,6 @@ interface LectureType {
   time: string;
   duration: string;
   details: string;
-}
-
-interface TeacherData {
-  _id: string;
-  userId: {
-    name: {
-      first: string;
-      last: string;
-    };
-    email: string;
-  };
-  department: string;
 }
 
 interface ScheduleData {
@@ -188,8 +175,8 @@ function Dashboard() {
                   Welcome Back
                 </h2>
                 <h1 className="text-4xl font-bold text-[#2989FF] mb-4">
-                  {user
-                    ? `${user?.name.first} ${user?.name.last}!`
+                  {user && user.name
+                    ? `${user.name.first || ""} ${user.name.last || ""}!`
                     : "Teacher!"}
                 </h1>
                 <p className="text-gray-600 text-[15px] leading-relaxed">

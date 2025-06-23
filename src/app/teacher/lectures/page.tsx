@@ -1,10 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Row, Col, Spin } from "antd";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getTeacherCoursesAndSchedules, getTeacherByUserId } from "api/teacher";
-// @ts-ignore
+import { getTeacherCoursesAndSchedules } from "api/teacher";
 import CourseCard from "components/Teacher/CourseCard";
+import { useAppState } from "hooks";
 
 interface CourseSchedule {
   _id: string;
@@ -21,35 +20,33 @@ interface CourseSchedule {
 }
 
 function Lectures() {
-  // Extract teacherId from localStorage user object (placeholder logic)
-  const user =
-    typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("user") || "{}")
-      : {};
-  const userId = user?._id;
+  const {
+    auth: { user },
+  } = useAppState();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [schedules, setSchedules] = useState<CourseSchedule[]>([]);
 
-  // First fetch teacher profile using userId
-  const { data: teacherData, isLoading: loadingTeacher } = useQuery({
-    queryKey: ["teacher-profile", userId],
-    queryFn: () => getTeacherByUserId(userId).then((res) => res.data),
-    enabled: !!userId,
-  });
+  useEffect(() => {
+    if (user) {
+      fetchTeacherData();
+    }
+  }, [user]);
 
-  const teacherId = teacherData?._id;
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["teacher-courses", teacherId],
-    queryFn: () =>
-      getTeacherCoursesAndSchedules().then((res) => res.data),
-    enabled: !!teacherId,
-  });
-
-  const schedules: CourseSchedule[] = data || [];
-
-  /*
-   * Memo-compute next occurrence & upcoming flag whenever schedule data changes.
-   * This avoids recalculating on each render and keeps the logic isolated/readable.
-   */
+  const fetchTeacherData = async () => {
+    try {
+      setLoading(true);
+      const data = await getTeacherCoursesAndSchedules();
+      setSchedules(data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to load courses.");
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
   const { processedSchedules, upcomingId } = useMemo(() => {
     const now = new Date();
     const dayMap: Record<string, number> = {
@@ -73,7 +70,7 @@ function Lectures() {
         target.setDate(now.getDate() + diff);
         const [h, m] = sched.schedule.startTime.split(":");
         target.setHours(Number(h), Number(m), 0, 0);
-        if (target < now) target.setDate(target.getDate() + 7); // next cycle
+        if (target < now) target.setDate(target.getDate() + 7);
         if (!best || target < best) best = target;
       });
       return best;
@@ -94,7 +91,7 @@ function Lectures() {
     return { processedSchedules: withNext, upcomingId: upcoming };
   }, [schedules]);
 
-  if (loadingTeacher || isLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-full p-10">
         <Spin size="large" />
@@ -103,7 +100,7 @@ function Lectures() {
   }
 
   if (error) {
-    return <div className="p-6 text-red-500">Failed to load courses.</div>;
+    return <div className="p-6 text-red-500">{error}</div>;
   }
 
   return (
