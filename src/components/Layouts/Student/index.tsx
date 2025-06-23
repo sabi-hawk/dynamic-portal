@@ -31,6 +31,19 @@ const items: MenuItem[] = [
     label: <a href="/student/dashboard">Dashboard</a>,
   },
   {
+    key: "profile",
+    icon: (
+      <img
+        className="w-[13px] h-[13px]"
+        height={13}
+        width={13}
+        src="/assets/icons/assignments.svg"
+        alt="Profile Icon"
+      />
+    ),
+    label: <a href="/student/profile">Profile</a>,
+  },
+  {
     key: "courses",
     icon: (
       <img
@@ -44,7 +57,7 @@ const items: MenuItem[] = [
     label: <a href="/student/courses">Courses</a>,
   },
   {
-    key: "lectures",
+    key: "time-table",
     icon: (
       <img
         className="w-[13px] h-[13px]"
@@ -54,7 +67,20 @@ const items: MenuItem[] = [
         alt="Dashboard Icon"
       />
     ),
-    label: <a href="/student/lectures">Class Schedules</a>,
+    label: <a href="/student/time-table">Time Table</a>,
+  },
+  {
+    key: "leaves",
+    icon: (
+      <img
+        className="w-[13px] h-[13px]"
+        height={13}
+        width={13}
+        src="/assets/icons/leaves.svg"
+        alt="Dashboard Icon"
+      />
+    ),
+    label: <a href="/student/leaves">Leaves</a>,
   },
   {
     key: "settings",

@@ -28,8 +28,9 @@ import TeacherLayout from "components/Layouts/Teacher";
 
 // Student routes
 import StudentDashboard from "app/student/dashboard/page";
-import StudentAssignments from "app/student/assignments/page";
-import StudentLectures from "app/student/lectures/page";
+import StudentProfile from "app/student/profile/page";
+import StudentTimeTable from "app/student/time-table/page";
+import StudentLeaves from "app/student/leaves/page";
 import StudentCourses from "app/student/courses/page";
 import StudentAttendance from "app/student/attendance/page";
 import StudentGrade from "app/student/grade/page";
@@ -62,10 +63,11 @@ const roleRoutes = {
   student: [
     { path: "dashboard", component: StudentDashboard },
     { path: "courses", component: StudentCourses },
-    { path: "lectures", component: StudentLectures },
-    { path: "assignments", component: StudentAssignments },
+    { path: "time-table", component: StudentTimeTable },
+    { path: "profile", component: StudentProfile },
     { path: "attendance", component: StudentAttendance },
     { path: "grade", component: StudentGrade },
+    { path: "leaves", component: StudentLeaves },
     { path: "settings", component: StudentSettings },
   ],
 };

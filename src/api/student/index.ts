@@ -27,3 +27,6 @@ export const getStudentByUserId = () => API.get(`/student/profile`);
 export const getStudentSchedule = () => API.get(`/student/schedule`);
 
 export const getStudentTodaySchedules = () => API.get(`/student/today`);
+
+export const getStudentTodaySchedulesWithInstructor = () =>
+  API.get(`/student/today-with-instructor`);

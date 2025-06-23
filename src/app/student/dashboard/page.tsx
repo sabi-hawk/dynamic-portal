@@ -2,9 +2,40 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row } from "antd";
 import { useAppState } from "hooks";
-import { getStudentSchedule, getStudentTodaySchedules } from "api/student";
+import {
+  getStudentSchedule,
+  getStudentTodaySchedulesWithInstructor,
+} from "api/student";
 
 interface ScheduleData {
+  _id: string;
+  course: {
+    courseCode: string;
+    courseName: string;
+    description: string;
+  };
+  instructor: {
+    _id: string;
+    userId: {
+      username: string;
+      name: {
+        first: string;
+        last: string;
+      };
+      email: string;
+    };
+    department: string;
+  };
+  section: string;
+  schedule: {
+    startTime: string;
+    endTime: string;
+    duration: number;
+    daysOfWeek: string[];
+  };
+}
+
+interface WeeklyScheduleData {
   _id: string;
   course: {
     courseCode: string;
@@ -32,7 +63,9 @@ function Dashboard() {
     auth: { user },
   } = useAppState();
   const [todaysClasses, setTodaysClasses] = useState<ScheduleData[]>([]);
-  const [weeklySchedule, setWeeklySchedule] = useState<ScheduleData[]>([]);
+  const [weeklySchedule, setWeeklySchedule] = useState<WeeklyScheduleData[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -45,10 +78,10 @@ function Dashboard() {
     try {
       setLoading(true);
 
-      // Get student's schedule and today's classes
+      // Get student's schedule and today's classes with instructor data
       const scheduleRes = await getStudentSchedule();
-      const todayRes = await getStudentTodaySchedules();
-
+      const todayRes = await getStudentTodaySchedulesWithInstructor();
+      console.log(todayRes.data);
       setTodaysClasses(todayRes.data);
       setWeeklySchedule(scheduleRes.data);
     } catch (error) {
@@ -158,8 +191,8 @@ function Dashboard() {
                           {cls.course.courseName}
                         </div>
                         <div className="text-xs text-[#888]">
-                          {cls.instructor.name?.first}{" "}
-                          {cls.instructor.name?.last}
+                          {cls.instructor.userId.name.first}{" "}
+                          {cls.instructor.userId.name.last}
                         </div>
                       </div>
                     </div>
