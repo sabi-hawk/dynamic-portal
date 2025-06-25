@@ -84,6 +84,7 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
       label: "Course Materials",
       icon: <FileTextOutlined />,
     },
+    "time-table": { label: "Time Table", icon: <CalendarOutlined /> },
     settings: { label: "Settings", icon: <SettingOutlined /> },
     courses: { label: "Courses", icon: <BookOutlined /> },
     grade: { label: "Grades", icon: <BarChartOutlined /> },
@@ -110,6 +111,32 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
   }, [form]);
 
   const features = featureOptions;
+
+  // Ensure all feature values are checked whenever features & form values are ready
+  useEffect(() => {
+    if (!features.teacher.length && !features.student.length) return;
+
+    const teacherCurrent: string[] =
+      form.getFieldValue(["portalPermissions", "teacherPortal", "features"]) ||
+      [];
+    const studentCurrent: string[] =
+      form.getFieldValue(["portalPermissions", "studentPortal", "features"]) ||
+      [];
+
+    const teacherMerged = Array.from(
+      new Set([...teacherCurrent, ...features.teacher])
+    );
+    const studentMerged = Array.from(
+      new Set([...studentCurrent, ...features.student])
+    );
+
+    form.setFieldsValue({
+      portalPermissions: {
+        teacherPortal: { features: teacherMerged },
+        studentPortal: { features: studentMerged },
+      },
+    });
+  }, [features.teacher, features.student, form]);
 
   return (
     <Col span={24} className="px-[30px] py-[10px]">
