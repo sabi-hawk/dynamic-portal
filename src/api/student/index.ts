@@ -33,5 +33,5 @@ export const getStudentTodaySchedulesWithInstructor = () =>
 
 export const getStudentCourses = () => API.get(`/student/courses`);
 
-export const getStudentMaterials = (courseId: string) =>
-  API.get(`/student/materials?courseId=${courseId}`);
+// Course materials
+export { getStudentMaterials } from "./material";

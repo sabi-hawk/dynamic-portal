@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getScheduleDetail } from "api/schedule";
 import { useParams, useNavigate } from "react-router-dom";
 import CourseMaterialsTab from "components/Teacher/CourseMaterialsTab";
+import SubmissionsTab from "components/Teacher/SubmissionsTab";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ function CourseDetail() {
           {
             key: "submissions",
             label: "Submissions",
-            children: <div>Coming Soon...</div>,
+            children: <SubmissionsTab scheduleId={scheduleId as string} />,
           },
           {
             key: "attendance",
