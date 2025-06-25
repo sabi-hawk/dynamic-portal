@@ -9,6 +9,7 @@ import type { MenuProps } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "flux/reducers/auth";
+import { clearPortalSettings } from "flux/reducers/settings";
 
 interface LayoutProps {
   children: ReactNode; // Define the type for children
@@ -120,6 +121,7 @@ function StudentLayout({ children }: LayoutProps) {
 
   const handleLogout = () => {
     dispatch(clearUser());
+    dispatch(clearPortalSettings());
     navigate("/");
   };
 

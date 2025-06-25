@@ -7,6 +7,7 @@ import { useMessageApi } from "utils";
 import { AxiosError } from "axios";
 import { useDispatch } from "react-redux";
 import { setUser, setLoading } from "flux/reducers/auth";
+import { setPortalSettings } from "flux/reducers/settings";
 import { useNavigate } from "react-router-dom";
 
 interface LoginValues {
@@ -24,15 +25,29 @@ function Login() {
     try {
       dispatch(setLoading(true));
       const { status, data } = await login(values);
-      const { message, ...payload } = data;
+      const { message, settings, ...userPayload } = data;
 
       if (status === 200) {
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        // Store settings separately if they exist
+        if (settings) {
+          dispatch(setPortalSettings(settings));
+        }
+        
         messageApi.success(data.message || "Login successful");
         form.resetFields();
-        dispatch(setUser(payload));
-        navigate("/");
+        dispatch(setUser(userPayload));
+        const role = userPayload.user?.role;
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else if (role === "teacher") {
+          navigate("/teacher/dashboard");
+        } else if (role === "student") {
+          navigate("/student/dashboard");
+        } else {
+          navigate("/");
+        }
       } else {
         throw new Error(message || "Login failed");
       }
@@ -51,6 +66,36 @@ function Login() {
     }
   };
 
+  // const handleLogin = async (values: LoginValues) => {
+  //   try {
+  //     dispatch(setLoading(true));
+  //     const { status, data } = await login(values);
+  //     const { message, ...payload } = data;
+
+  //     if (status === 200) {
+  //       localStorage.setItem("authToken", data.token);
+  //       localStorage.setItem("user", JSON.stringify(data.user));
+  //       messageApi.success(data.message || "Login successful");
+  //       form.resetFields();
+  //       dispatch(setUser(payload));
+  //       navigate("/");
+  //     } else {
+  //       throw new Error(message || "Login failed");
+  //     }
+  //   } catch (error: unknown) {
+  //     if (error instanceof AxiosError) {
+  //       // Handle AxiosError and access the response object
+  //       messageApi.error(error.response?.data?.message || error.message);
+  //     } else if (error instanceof Error) {
+  //       // Handle general error
+  //       messageApi.error(error.message);
+  //     } else {
+  //       messageApi.error("An unexpected error occurred.");
+  //     }
+  //   } finally {
+  //     dispatch(setLoading(false));
+  //   }
+  // };
   const onFinish = (values: LoginValues) => {
     handleLogin(values);
   };

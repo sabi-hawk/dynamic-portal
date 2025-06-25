@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import chatReducer from "./chat";
 import authReducer from "./auth";
 import extrasReducer from "./extras";
+import settingsReducer from "./settings";
 import storage from "redux-persist/lib/storage";
 
 const initialState = {};
@@ -22,6 +23,7 @@ const appReducer = combineReducers({
   chats: chatReducer,
   auth: authReducer,
   extras: extrasReducer,
+  settings: settingsReducer,
 });
 
 

@@ -108,6 +108,7 @@ const App = () => {
               )
             }
           />
+          
           {routes.map(({ path, component }) => (
             <Route
               key={path}
