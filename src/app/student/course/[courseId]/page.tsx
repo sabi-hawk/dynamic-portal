@@ -3,7 +3,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getStudentCourses } from "api/student";
-import Assignments from "./assignments/Assignments";
+import Submission from "./submission/Submissions";
 import Graded from "./graded/Graded";
 import Attendance from "./attendance/Attendance";
 import Materials from "./materials/Materials";
@@ -74,12 +74,12 @@ function CourseDetail() {
         {course.courseName} ({course.courseCode}) – Section {course.section}
       </h2>
       <Tabs
-        defaultActiveKey="assignments"
+        defaultActiveKey="submission"
         items={[
           {
-            key: "assignments",
-            label: "Assignments",
-            children: <Assignments />,
+            key: "submission",
+            label: "Submission",
+            children: <Submission />,
           },
           {
             key: "graded",
