@@ -9,6 +9,7 @@ import type { MenuProps } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "flux/reducers/auth";
+import { useAppState } from "hooks";
 
 interface LayoutProps {
   children: ReactNode; // Define the type for children
@@ -112,6 +113,10 @@ const items: MenuItem[] = [
 ];
 
 function TeacherLayout({ children }: LayoutProps) {
+  const {
+    auth: { user },
+  } = useAppState();
+
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation(); // Get the current path
   const [selectedKey, setSelectedKey] = useState<string>("");
@@ -156,7 +161,7 @@ function TeacherLayout({ children }: LayoutProps) {
                 height={75}
               />
               <span className="font-roboto text-sm font-normal leading-4 text-center">
-                Username
+                {user?.name.first}
               </span>
               <span className="font-roboto text-xs font-normal leading-[14.06px] text-center">
                 Teacher
@@ -189,7 +194,7 @@ function TeacherLayout({ children }: LayoutProps) {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <div>
-            <span className="mr-3.5">Username</span>
+            <span className="mr-3.5">{user?.name.first}</span>
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         </Row>

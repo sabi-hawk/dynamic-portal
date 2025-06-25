@@ -70,6 +70,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (user?._id) {
+      console.log("user", user);
       fetchStudentData();
     }
   }, [user]);

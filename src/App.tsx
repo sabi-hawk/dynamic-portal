@@ -32,6 +32,7 @@ import StudentProfile from "app/student/profile/page";
 import StudentTimeTable from "app/student/time-table/page";
 import StudentLeaves from "app/student/leaves/page";
 import StudentCourses from "app/student/courses/page";
+import StudentCourseDetail from "app/student/course/[courseId]/page";
 import StudentAttendance from "app/student/attendance/page";
 import StudentGrade from "app/student/grade/page";
 import StudentSettings from "app/student/settings/page";
@@ -63,6 +64,7 @@ const roleRoutes = {
   student: [
     { path: "dashboard", component: StudentDashboard },
     { path: "courses", component: StudentCourses },
+    { path: "course/:courseId", component: StudentCourseDetail },
     { path: "time-table", component: StudentTimeTable },
     { path: "profile", component: StudentProfile },
     { path: "attendance", component: StudentAttendance },

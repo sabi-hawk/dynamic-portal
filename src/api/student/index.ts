@@ -30,3 +30,8 @@ export const getStudentTodaySchedules = () => API.get(`/student/today`);
 
 export const getStudentTodaySchedulesWithInstructor = () =>
   API.get(`/student/today-with-instructor`);
+
+export const getStudentCourses = () => API.get(`/student/courses`);
+
+export const getStudentMaterials = (courseId: string) =>
+  API.get(`/student/materials?courseId=${courseId}`);

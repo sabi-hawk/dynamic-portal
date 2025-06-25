@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadMaterial, getMaterials, deleteMaterial } from "api/material";
+import API from "api";
 
 interface Props {
   scheduleId: string;
@@ -62,7 +63,16 @@ function CourseMaterialsTab({ scheduleId }: Props) {
         renderItem={(item: any) => (
           <List.Item
             actions={[
-              <a key="download" href={`/uploads/${item.storedName}`} download>
+              <a
+                key="download"
+                href={`${(API.defaults.baseURL || "").replace(
+                  /\/api\/?$/,
+                  ""
+                )}/uploads/materials/${item.storedName}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                download={item.originalName}
+              >
                 <DownloadOutlined />
               </a>,
               <Popconfirm
