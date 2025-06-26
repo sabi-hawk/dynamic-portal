@@ -5,6 +5,7 @@ import { getScheduleDetail } from "api/schedule";
 import { useParams, useNavigate } from "react-router-dom";
 import CourseMaterialsTab from "components/Teacher/CourseMaterialsTab";
 import SubmissionsTab from "components/Teacher/SubmissionsTab";
+import AttendanceTab from "components/Teacher/AttendanceTab";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -55,7 +56,12 @@ function CourseDetail() {
           {
             key: "attendance",
             label: "Attendance",
-            children: <div>Coming Soon...</div>,
+            children: (
+              <AttendanceTab
+                scheduleId={scheduleId as string}
+                schedule={data}
+              />
+            ),
           },
           {
             key: "grades",
