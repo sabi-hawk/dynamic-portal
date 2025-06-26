@@ -44,22 +44,54 @@ function AdminLayout({ children }: LayoutProps) {
     const menuData = [
       {
         key: "dashboard",
-        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/dashboard.svg" alt="Dashboard Icon" />,
+        icon: (
+          <img
+            className="w-[13px] h-[13px]"
+            height={13}
+            width={13}
+            src="/assets/icons/dashboard.svg"
+            alt="Dashboard Icon"
+          />
+        ),
         label: "Dashboard",
       },
       {
         key: "students",
-        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/students.svg" alt="Student Icon" />,
+        icon: (
+          <img
+            className="w-[13px] h-[13px]"
+            height={13}
+            width={13}
+            src="/assets/icons/students.svg"
+            alt="Student Icon"
+          />
+        ),
         label: "Students",
       },
       {
         key: "courses",
-        icon: <img className="w-[11.24px] h-[13px]" height={13} width={13} src="/assets/icons/courses.svg" alt="Courses Icon" />,
+        icon: (
+          <img
+            className="w-[11.24px] h-[13px]"
+            height={13}
+            width={13}
+            src="/assets/icons/courses.svg"
+            alt="Courses Icon"
+          />
+        ),
         label: "Courses",
       },
       {
         key: "staff",
-        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/teachers.svg" alt="Staff Icon" />,
+        icon: (
+          <img
+            className="w-[13px] h-[13px]"
+            height={13}
+            width={13}
+            src="/assets/icons/teachers.svg"
+            alt="Staff Icon"
+          />
+        ),
         label: "Staff",
       },
       {
@@ -69,7 +101,15 @@ function AdminLayout({ children }: LayoutProps) {
       },
       {
         key: "attendance",
-        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/teachers.svg" alt="Attendance Icon" />,
+        icon: (
+          <img
+            className="w-[13px] h-[13px]"
+            height={13}
+            width={13}
+            src="/assets/icons/teachers.svg"
+            alt="Attendance Icon"
+          />
+        ),
         label: "Attendance",
       },
       {
@@ -92,9 +132,13 @@ function AdminLayout({ children }: LayoutProps) {
           <div className="flex items-center justify-between w-full">
             <a
               href={`/admin/${item.key}`}
-              className={`flex-1 flex items-center gap-2 ${isDisabled ? 'pointer-events-none text-gray-400' : ''}`}
+              className={`flex-1 flex items-center gap-2 ${
+                isDisabled ? "pointer-events-none text-gray-400" : ""
+              }`}
               tabIndex={isDisabled ? -1 : 0}
-              onClick={e => { if (isDisabled) e.preventDefault(); }}
+              onClick={(e) => {
+                if (isDisabled) e.preventDefault();
+              }}
             >
               <span>{item.label}</span>
             </a>
@@ -138,14 +182,14 @@ function AdminLayout({ children }: LayoutProps) {
           title="Portal Settings Required"
           subTitle="You must configure your portal settings before accessing the admin portal."
           extra={[
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               key="settings"
               onClick={() => navigate("/admin/settings")}
               icon={<SettingOutlined />}
             >
               Go to Settings
-            </Button>
+            </Button>,
           ]}
         />
       </div>
@@ -158,7 +202,9 @@ function AdminLayout({ children }: LayoutProps) {
       <Col
         className="p-[30px] py-[30px] px-[10px] flex flex-col justify-between h-full"
         span={collapsed ? 1 : 3}
-        style={{ backgroundColor: settings.portalSettings?.secondaryColor || undefined }}
+        style={{
+          backgroundColor: settings.portalSettings?.secondaryColor || undefined,
+        }}
       >
         {/* Menu at the top */}
         <div>
@@ -172,7 +218,9 @@ function AdminLayout({ children }: LayoutProps) {
               items={getMenuItems()}
               onClick={({ key }) => {
                 if (!isPortalConfigured && key !== "settings") {
-                  message.warning("This item is disabled. Please configure your portal settings.");
+                  message.warning(
+                    "This item is disabled. Please configure your portal settings."
+                  );
                   return;
                 }
               }}
@@ -197,7 +245,10 @@ function AdminLayout({ children }: LayoutProps) {
                 />
               </div>
             ) : (
-              <div className="w-[96px] h-[96px] bg-gray-200 flex items-center justify-center border border-gray-200 shadow-lg mb-3" style={{ borderRadius: "18px" }}>
+              <div
+                className="w-[96px] h-[96px] bg-gray-200 flex items-center justify-center border border-gray-200 shadow-lg mb-3"
+                style={{ borderRadius: "18px" }}
+              >
                 <UserOutlined className="text-4xl text-gray-400" />
               </div>
             )}
@@ -212,7 +263,9 @@ function AdminLayout({ children }: LayoutProps) {
             {/* Minimal Footer */}
             <div className="w-full mt-4 text-center text-xs text-gray-400 border-t border-gray-100 pt-2">
               <div>
-                <span className="font-semibold">{settings.portalSettings?.instituteType?.toUpperCase()}</span>
+                <span className="font-semibold">
+                  {settings.portalSettings?.instituteType?.toUpperCase()}
+                </span>
               </div>
               <div>{settings.portalSettings?.contactEmail}</div>
               <div>{settings.portalSettings?.contactPhone}</div>
@@ -225,7 +278,9 @@ function AdminLayout({ children }: LayoutProps) {
         {/* Header */}
         <Row
           className="p-4 justify-between flex-shrink-0"
-          style={{ backgroundColor: settings.portalSettings?.primaryColor || undefined }}
+          style={{
+            backgroundColor: settings.portalSettings?.primaryColor || undefined,
+          }}
         >
           <Button
             className="m-0 text-inherit bg-inherit shadow-none"
@@ -245,9 +300,11 @@ function AdminLayout({ children }: LayoutProps) {
             <div className="flex items-center justify-center w-full h-full">
               <span className="text-lg text-gray-500">Loading...</span>
             </div>
-          ) :
-            (!isPortalConfigured && !isSettingsPage ? renderWarningContent() : children)
-          }
+          ) : !isPortalConfigured && !isSettingsPage ? (
+            renderWarningContent()
+          ) : (
+            children
+          )}
         </Row>
       </Col>
     </Row>

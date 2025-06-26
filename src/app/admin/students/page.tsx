@@ -9,16 +9,19 @@ import {
   PlusOutlined,
   FilterOutlined,
 } from "@ant-design/icons";
-import StudentModal from "components/Admin/StudentModal";
+import AddUniversityStudentModal from "components/Admin/Institute/University/AddUniversityStudentModal";
+import AddCollegeStudentModal from "components/Admin/Institute/College/AddCollegeStudentModal";
+import AddSchoolStudentModal from "components/Admin/Institute/School/AddSchoolStudentModal";
 import { deleteStudent, getStudents } from "api/student";
 import { useMessageApi } from "utils";
+import { useAppState } from "hooks";
 
 interface DataType {
   key: React.Key;
   image: string;
   rollNo: number;
   name: { first: string; last: string };
-  department: string;
+  department?: string;
   gender: string;
   mobile: string;
   email: string;
@@ -96,6 +99,8 @@ const Students = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const messageApi = useMessageApi();
+  const { settings } = useAppState();
+  const instituteType = settings.portalSettings?.instituteType?.toLowerCase();
 
   const fetchStudents = useCallback(async () => {
     try {
@@ -107,8 +112,8 @@ const Students = () => {
         image: student.image || "/assets/images/user.png",
         rollNo: student.rollNo,
         name: student.name
-          ? { first: student.name.first || '', last: student.name.last || '' }
-          : { first: '', last: '' },
+          ? { first: student.name.first || "", last: student.name.last || "" }
+          : { first: "", last: "" },
         department: student.department,
         gender: student.gender,
         mobile: student.mobile,
@@ -280,7 +285,42 @@ const Students = () => {
           }}
         />
       </div>
-      <StudentModal open={open} setOpen={setOpen} onSuccess={fetchStudents} editMode={editMode} studentData={selectedStudent} />
+      {instituteType === "university" && (
+        <AddUniversityStudentModal
+          open={open}
+          setOpen={setOpen}
+          onSuccess={fetchStudents}
+          editMode={editMode}
+          studentData={selectedStudent}
+        />
+      )}
+      {instituteType === "college" && (
+        <AddCollegeStudentModal
+          open={open}
+          setOpen={setOpen}
+          onSuccess={fetchStudents}
+          editMode={editMode}
+          studentData={selectedStudent}
+        />
+      )}
+      {instituteType === "school" && (
+        <AddSchoolStudentModal
+          open={open}
+          setOpen={setOpen}
+          onSuccess={fetchStudents}
+          editMode={editMode}
+          studentData={selectedStudent}
+        />
+      )}
+      {!["university", "college", "school"].includes(instituteType || "") && (
+        <AddUniversityStudentModal
+          open={open}
+          setOpen={setOpen}
+          onSuccess={fetchStudents}
+          editMode={editMode}
+          studentData={selectedStudent}
+        />
+      )}
     </div>
   );
 };
