@@ -112,32 +112,6 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
 
   const features = featureOptions;
 
-  // Ensure all feature values are checked whenever features & form values are ready
-  useEffect(() => {
-    if (!features.teacher.length && !features.student.length) return;
-
-    const teacherCurrent: string[] =
-      form.getFieldValue(["portalPermissions", "teacherPortal", "features"]) ||
-      [];
-    const studentCurrent: string[] =
-      form.getFieldValue(["portalPermissions", "studentPortal", "features"]) ||
-      [];
-
-    const teacherMerged = Array.from(
-      new Set([...teacherCurrent, ...features.teacher])
-    );
-    const studentMerged = Array.from(
-      new Set([...studentCurrent, ...features.student])
-    );
-
-    form.setFieldsValue({
-      portalPermissions: {
-        teacherPortal: { features: teacherMerged },
-        studentPortal: { features: studentMerged },
-      },
-    });
-  }, [features.teacher, features.student, form]);
-
   return (
     <Col span={24} className="px-[30px] py-[10px]">
       <Title level={4}>Portal Access Rights</Title>
@@ -191,7 +165,35 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
               name={["portalPermissions", "teacherPortal", "enabled"]}
               valuePropName="checked"
             >
-              <Switch />
+              <Switch
+                onChange={(checked) => {
+                  if (checked) {
+                    // Set all features when enabling
+                    form.setFieldsValue({
+                      portalPermissions: {
+                        ...form.getFieldValue("portalPermissions"),
+                        teacherPortal: {
+                          ...form.getFieldValue(["portalPermissions", "teacherPortal"]),
+                          enabled: true,
+                          features: features.teacher,
+                        },
+                      },
+                    });
+                  } else {
+                    // Optionally clear features when disabling
+                    form.setFieldsValue({
+                      portalPermissions: {
+                        ...form.getFieldValue("portalPermissions"),
+                        teacherPortal: {
+                          ...form.getFieldValue(["portalPermissions", "teacherPortal"]),
+                          enabled: false,
+                          features: [],
+                        },
+                      },
+                    });
+                  }
+                }}
+              />
             </Form.Item>
           </Col>
           <Col span={18}>
@@ -253,7 +255,35 @@ const PermissionsForm: React.FC<PermissionsFormProps> = ({ form }) => {
               name={["portalPermissions", "studentPortal", "enabled"]}
               valuePropName="checked"
             >
-              <Switch />
+              <Switch
+                onChange={(checked) => {
+                  if (checked) {
+                    // Set all features when enabling
+                    form.setFieldsValue({
+                      portalPermissions: {
+                        ...form.getFieldValue("portalPermissions"),
+                        studentPortal: {
+                          ...form.getFieldValue(["portalPermissions", "studentPortal"]),
+                          enabled: true,
+                          features: features.student,
+                        },
+                      },
+                    });
+                  } else {
+                    // Optionally clear features when disabling
+                    form.setFieldsValue({
+                      portalPermissions: {
+                        ...form.getFieldValue("portalPermissions"),
+                        studentPortal: {
+                          ...form.getFieldValue(["portalPermissions", "studentPortal"]),
+                          enabled: false,
+                          features: [],
+                        },
+                      },
+                    });
+                  }
+                }}
+              />
             </Form.Item>
           </Col>
           <Col span={18}>

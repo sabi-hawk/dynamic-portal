@@ -10,7 +10,7 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import StudentModal from "components/Admin/StudentModal";
-import { getStudents } from "api/student";
+import { deleteStudent, getStudents } from "api/student";
 import { useMessageApi } from "utils";
 
 interface DataType {
@@ -151,7 +151,7 @@ const Students = () => {
 
   const handleDelete = async (key: React.Key) => {
     try {
-      // await deleteStudent(key.toString());
+      await deleteStudent(key.toString());
       messageApi.success("Student deleted successfully");
       fetchStudents();
     } catch (error) {
