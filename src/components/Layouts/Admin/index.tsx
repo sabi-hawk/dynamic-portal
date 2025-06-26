@@ -1,6 +1,6 @@
 "use client";
-import { Col, Row, Button, Menu } from "antd";
-import React, { ReactNode, useEffect, useState } from "react";
+import { Col, Row, Button, Menu, Alert, Result, message } from "antd";
+import React, { ReactNode, useEffect, useState, useCallback } from "react";
 // import Image from "next/image";
 // import { usePathname } from "next/navigation";
 import {
@@ -8,6 +8,8 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
+  ExclamationCircleOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 // import Link from "next/link";
@@ -24,105 +26,6 @@ interface LayoutProps {
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = [
-  {
-    key: "dashboard",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/dashboard.svg"
-        alt="Dashboard Icon"
-      />
-    ),
-    label: <a href="/admin/dashboard">Dashboard</a>,
-  },
-  // {
-  //   key: "teachers",
-  //   icon: (
-  //     <img
-  //       className="w-[13px] h-[13px]"
-  //       height={13}
-  //       width={13}
-  //       src="/assets/icons/teachers.svg"
-  //       alt="teachers Icon"
-  //     />
-  //   ),
-  //   label: <a href="/admin/teachers">Teachers</a>,
-  // },
-  {
-    key: "students",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/students.svg"
-        alt="Student Icon"
-      />
-    ),
-    label: <a href="/admin/students">Students</a>,
-  },
-  {
-    key: "courses",
-    icon: (
-      <img
-        className="w-[11.24px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/courses.svg"
-        alt="Courses Icon"
-      />
-    ),
-    label: <a href="/admin/courses">Courses</a>,
-  },
-  {
-    key: "staff",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/teachers.svg"
-        alt="staff Icon"
-      />
-    ),
-    label: <a href="/admin/staff">Staff</a>,
-  },
-  {
-    key: "cash-flows",
-    icon: <DollarOutlined />,
-    label: <a href="/admin/cash-flows">Cash Flows</a>,
-  },
-  {
-    key: "attendance",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/teachers.svg"
-        alt="attendance Icon"
-      />
-    ),
-    label: <a href="/admin/attendance">Attendance</a>,
-  },
-  {
-    key: "settings",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/settings.svg"
-        alt="Settings Icon"
-      />
-    ),
-    label: <a href="/admin/settings">Settings</a>,
-  },
-];
-
 function AdminLayout({ children }: LayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
@@ -131,15 +34,89 @@ function AdminLayout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const { settings } = useAppState();
 
+  // Check if portal settings are configured
+  const isPortalConfigured = settings.portalSettings !== null;
+  const isSettingsPage = location.pathname === "/admin/settings";
+  const isLoading = settings.loading;
+
+  // Create menu items with conditional rendering based on portal settings
+  const getMenuItems = useCallback((): MenuItem[] => {
+    const menuData = [
+      {
+        key: "dashboard",
+        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/dashboard.svg" alt="Dashboard Icon" />,
+        label: "Dashboard",
+      },
+      {
+        key: "students",
+        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/students.svg" alt="Student Icon" />,
+        label: "Students",
+      },
+      {
+        key: "courses",
+        icon: <img className="w-[11.24px] h-[13px]" height={13} width={13} src="/assets/icons/courses.svg" alt="Courses Icon" />,
+        label: "Courses",
+      },
+      {
+        key: "staff",
+        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/teachers.svg" alt="Staff Icon" />,
+        label: "Staff",
+      },
+      {
+        key: "cash-flows",
+        icon: <DollarOutlined />,
+        label: "Cash Flows",
+      },
+      {
+        key: "attendance",
+        icon: <img className="w-[13px] h-[13px]" height={13} width={13} src="/assets/icons/teachers.svg" alt="Attendance Icon" />,
+        label: "Attendance",
+      },
+      {
+        key: "settings",
+        icon: <SettingOutlined />,
+        label: "Settings",
+      },
+    ];
+
+    return menuData.map((item) => {
+      // Only Settings is enabled if not configured
+      const isSettings = item.key === "settings";
+      const isDisabled = !isPortalConfigured && !isSettings;
+      // Custom label: icon + text left, warning icon right (if needed)
+      return {
+        key: item.key,
+        icon: item.icon,
+        disabled: isDisabled,
+        label: (
+          <div className="flex items-center justify-between w-full">
+            <a
+              href={`/admin/${item.key}`}
+              className={`flex-1 flex items-center gap-2 ${isDisabled ? 'pointer-events-none text-gray-400' : ''}`}
+              tabIndex={isDisabled ? -1 : 0}
+              onClick={e => { if (isDisabled) e.preventDefault(); }}
+            >
+              <span>{item.label}</span>
+            </a>
+            {!isPortalConfigured && !isSettings && (
+              <ExclamationCircleOutlined className="text-orange-500 ml-2 text-base" />
+            )}
+          </div>
+        ),
+      };
+    });
+  }, [isPortalConfigured]);
+
   useEffect(() => {
     // Check for window to ensure this runs only on the client side
     if (typeof window !== "undefined") {
       const currentPath = location.pathname.split("/").pop();
-      const foundItem = items.find((item) => item?.key === currentPath); // Find item by key
+      const menuItems = getMenuItems();
+      const foundItem = menuItems.find((item) => item?.key === currentPath); // Find item by key
       const key = foundItem?.key || "dashboard";
       setSelectedKey(key as string);
     }
-  }, [location]);
+  }, [location, getMenuItems]);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -150,10 +127,39 @@ function AdminLayout({ children }: LayoutProps) {
     dispatch(clearPortalSettings());
     navigate("/");
   };
+
+  // Render warning content when portal is not configured
+  const renderWarningContent = () => {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Result
+          status="warning"
+          icon={<ExclamationCircleOutlined />}
+          title="Portal Settings Required"
+          subTitle="You must configure your portal settings before accessing the admin portal."
+          extra={[
+            <Button 
+              type="primary" 
+              key="settings"
+              onClick={() => navigate("/admin/settings")}
+              icon={<SettingOutlined />}
+            >
+              Go to Settings
+            </Button>
+          ]}
+        />
+      </div>
+    );
+  };
+
   return (
     <Row className="h-screen">
       {/* Navigation */}
-      <Col className="p-[30px] py-[30px] px-[10px] flex flex-col justify-between h-full" span={collapsed ? 1 : 3}>
+      <Col
+        className="p-[30px] py-[30px] px-[10px] flex flex-col justify-between h-full"
+        span={collapsed ? 1 : 3}
+        style={{ backgroundColor: settings.portalSettings?.secondaryColor || undefined }}
+      >
         {/* Menu at the top */}
         <div>
           <div className="mt-[30px]">
@@ -163,7 +169,13 @@ function AdminLayout({ children }: LayoutProps) {
               defaultOpenKeys={["sub1"]}
               mode="inline"
               inlineCollapsed={collapsed}
-              items={items}
+              items={getMenuItems()}
+              onClick={({ key }) => {
+                if (!isPortalConfigured && key !== "settings") {
+                  message.warning("This item is disabled. Please configure your portal settings.");
+                  return;
+                }
+              }}
             />
           </div>
         </div>
@@ -211,7 +223,10 @@ function AdminLayout({ children }: LayoutProps) {
 
       <Col className="flex flex-col h-screen" span={collapsed ? 23 : 21}>
         {/* Header */}
-        <Row className="p-4 justify-between flex-shrink-0">
+        <Row
+          className="p-4 justify-between flex-shrink-0"
+          style={{ backgroundColor: settings.portalSettings?.primaryColor || undefined }}
+        >
           <Button
             className="m-0 text-inherit bg-inherit shadow-none"
             type="primary"
@@ -226,7 +241,13 @@ function AdminLayout({ children }: LayoutProps) {
         </Row>
         {/* Main Content: Make this scrollable */}
         <Row className="bg-[#f0f3fb] flex-grow shadow-custom flex flex-col p-[30px] overflow-y-auto min-h-0">
-          {children}
+          {isLoading ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <span className="text-lg text-gray-500">Loading...</span>
+            </div>
+          ) :
+            (!isPortalConfigured && !isSettingsPage ? renderWarningContent() : children)
+          }
         </Row>
       </Col>
     </Row>

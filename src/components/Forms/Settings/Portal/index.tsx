@@ -6,9 +6,12 @@ import DetailsForm from "./DetailsForm";
 import PermissionsForm from "./PermissionsForm";
 import { updatePortalSettings } from "api/settings";
 import "./index.scss";
+import { setPortalSettings } from "flux/reducers/settings";
+import { useDispatch } from "react-redux";
 
 const PortalSettings: React.FC = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (values: any) => {
     try {
@@ -16,32 +19,53 @@ const PortalSettings: React.FC = () => {
       const submissionData = { ...values };
 
       // Convert color objects to hex strings
-      if (submissionData.primaryColor && typeof submissionData.primaryColor === 'object') {
+      if (
+        submissionData.primaryColor &&
+        typeof submissionData.primaryColor === "object"
+      ) {
         submissionData.primaryColor = submissionData.primaryColor.toHexString();
       }
-      if (submissionData.secondaryColor && typeof submissionData.secondaryColor === 'object') {
-        submissionData.secondaryColor = submissionData.secondaryColor.toHexString();
+      if (
+        submissionData.secondaryColor &&
+        typeof submissionData.secondaryColor === "object"
+      ) {
+        submissionData.secondaryColor =
+          submissionData.secondaryColor.toHexString();
       }
-      
+
       // Append all simple key-value pairs
-      Object.keys(submissionData).forEach(key => {
-        if (key !== 'portalPermissions' && key !== 'logo' && submissionData[key] !== undefined) {
+      Object.keys(submissionData).forEach((key) => {
+        if (
+          key !== "portalPermissions" &&
+          key !== "logo" &&
+          submissionData[key] !== undefined
+        ) {
           formData.append(key, submissionData[key]);
         }
       });
 
       // Handle nested portalPermissions
       if (submissionData.portalPermissions) {
-        formData.append('portalPermissions', JSON.stringify(submissionData.portalPermissions));
-      }
-      
-      // Handle file upload
-      if (submissionData.logo && submissionData.logo[0] && submissionData.logo[0].originFileObj) {
-        formData.append('logo', submissionData.logo[0].originFileObj);
+        formData.append(
+          "portalPermissions",
+          JSON.stringify(submissionData.portalPermissions)
+        );
       }
 
-      await updatePortalSettings(formData);
-      message.success("Settings updated successfully!");
+      // Handle file upload
+      if (
+        submissionData.logo &&
+        submissionData.logo[0] &&
+        submissionData.logo[0].originFileObj
+      ) {
+        formData.append("logo", submissionData.logo[0].originFileObj);
+      }
+
+      const { status, data } = await updatePortalSettings(formData);
+      if (status === 200) {
+        dispatch(setPortalSettings(data));
+        message.success("Settings updated successfully!");
+      }
     } catch (error) {
       console.error("Failed to update settings:", error);
       message.error("Failed to update settings. Please try again.");
@@ -83,7 +107,12 @@ const PortalSettings: React.FC = () => {
           items={items}
         />
         <Form.Item>
-          <Button type="primary" htmlType="submit" size="large" className="rounded-full mt-4">
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            className="rounded-full mt-4"
+          >
             Save All Settings
           </Button>
         </Form.Item>
