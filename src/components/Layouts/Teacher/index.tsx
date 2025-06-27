@@ -97,7 +97,19 @@ const items: MenuItem[] = [
     ),
     label: <a href="/teacher/time-table">Time Table</a>,
   },
-
+  {
+    key: "announcements",
+    icon: (
+      <img
+        className="w-[13px] h-[13px]"
+        height={13}
+        width={13}
+        src="/assets/icons/announcement.svg"
+        alt="Announcements Icon"
+      />
+    ),
+    label: <a href="/teacher/announcements">Announcements</a>,
+  },
   {
     key: "settings",
     icon: (

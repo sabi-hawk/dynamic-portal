@@ -39,17 +39,21 @@ import StudentSettings from "app/student/settings/page";
 import StudentLayout from "components/Layouts/Student";
 import React from "react";
 import NotFound from "app/NotFound";
+import AdminAnnouncements from "app/admin/announcements/page";
+import TeacherAnnouncements from "app/teacher/announcements/page";
+import StudentAnnouncements from "app/student/announcements/page";
 
 const roleRoutes = {
   admin: [
     { path: "dashboard", component: AdminDashboard },
     { path: "teachers", component: Teachers },
     { path: "students", component: Students },
-    { path: "courses", component: Courses },
+    { path: "courses", component: Courses },  
     { path: "staff", component: Staff },
     { path: "cash-flows", component: CashFlows },
     { path: "attendance", component: Attendance },
     { path: "settings", component: Settings },
+    { path: "announcements", component: AdminAnnouncements },
   ],
   teacher: [
     { path: "dashboard", component: TeacherDashboard },
@@ -60,6 +64,7 @@ const roleRoutes = {
     { path: "time-table", component: TeacherTimeTable },
     { path: "profile", component: TeacherProfile },
     { path: "settings", component: TeacherSettings },
+    { path: "announcements", component: TeacherAnnouncements },
   ],
   student: [
     { path: "dashboard", component: StudentDashboard },
@@ -71,6 +76,7 @@ const roleRoutes = {
     { path: "grade", component: StudentGrade },
     { path: "leaves", component: StudentLeaves },
     { path: "settings", component: StudentSettings },
+    { path: "announcements", component: StudentAnnouncements },
   ],
 };
 

@@ -117,6 +117,19 @@ function AdminLayout({ children }: LayoutProps) {
         icon: <SettingOutlined />,
         label: "Settings",
       },
+      {
+        key: "announcements",
+        icon: (
+          <img
+            className="w-[13px] h-[13px]"
+            height={13}
+            width={13}
+            src="/assets/icons/announcement.svg"
+            alt="Announcements Icon"
+          />
+        ),
+        label: "Announcements",
+      },
     ];
 
     return menuData.map((item) => {
