@@ -30,3 +30,9 @@ export const getTeacherByUserId = () => API.get(`/teacher/profile`);
 export const getTeacherCoursesAndSchedules = () => API.get(`/teacher/courses`);
 
 export const getTeacherTodaySchedules = () => API.get(`/teacher/today`);
+
+export const getTeacherLeaves = () => API.get(`/teacher/leaves`);
+export const updateLeaveStatus = (
+  id: string,
+  status: "accepted" | "rejected"
+) => API.patch(`/teacher/leaves/${id}`, { status });

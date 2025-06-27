@@ -52,8 +52,11 @@ export default function TimeTable() {
       if (!schedule?.daysOfWeek?.length) return;
       schedule.daysOfWeek.forEach((day: string) => {
         const startHour = parseInt(schedule.startTime.split(":")[0], 10);
-        if (DAYS.includes(day) && TIMES.includes(startHour)) {
-          map[day][startHour].push({ ...sched, color: getColor(idx) });
+        const endHour = parseInt(schedule.endTime.split(":")[0], 10);
+        for (let h = startHour; h < endHour; h++) {
+          if (DAYS.includes(day) && TIMES.includes(h)) {
+            map[day][h].push({ ...sched, color: getColor(idx) });
+          }
         }
       });
     });

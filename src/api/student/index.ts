@@ -35,3 +35,11 @@ export const getStudentCourses = () => API.get(`/student/courses`);
 
 // Course materials
 export { getStudentMaterials } from "./material";
+
+export const getStudentLeaves = () => API.get(`/student/leaves`);
+export const createLeaveRequest = (payload: {
+  courseScheduleId: string;
+  requestedDay: string;
+  reason: string;
+}) => API.post(`/student/leaves`, payload);
+export const getLeaveCourses = () => API.get(`/student/leaves/courses`);
