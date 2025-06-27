@@ -269,15 +269,6 @@ function CourseModal({
             </>
           )}
         </Form.List>
-
-        <Form.Item>
-          <Space>
-            <Button type="primary" htmlType="submit">
-              {editMode ? "Update" : "Save"}
-            </Button>
-            <Button onClick={handleCancel}>Cancel</Button>
-          </Space>
-        </Form.Item>
       </Form>
     </Modal>
   );

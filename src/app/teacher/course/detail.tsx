@@ -6,6 +6,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import CourseMaterialsTab from "components/Teacher/CourseMaterialsTab";
 import SubmissionsTab from "components/Teacher/SubmissionsTab";
 import AttendanceTab from "components/Teacher/AttendanceTab";
+import { useAppState } from "hooks";
+import { useHasFeature } from "utils/config";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -17,6 +19,11 @@ function CourseDetail() {
       getScheduleDetail(scheduleId as string).then((res) => res.data),
     enabled: !!scheduleId,
   });
+
+  const showMaterials = useHasFeature("teacherPortal", "course-material");
+  const showSubmissions = useHasFeature("teacherPortal", "submission");
+  const showAttendance = useHasFeature("teacherPortal", "attendance");
+  const showGrades = useHasFeature("teacherPortal", "grade");
 
   if (isLoading || !data) {
     return (
@@ -41,33 +48,63 @@ function CourseDetail() {
         {data.section}
       </h2>
       <Tabs
-        defaultActiveKey="materials"
+        defaultActiveKey={
+          showMaterials
+            ? "course-material"
+            : showSubmissions
+            ? "submission"
+            : showAttendance
+            ? "attendance"
+            : showGrades
+            ? "grade"
+            : undefined
+        }
         items={[
-          {
-            key: "materials",
-            label: "Course Material",
-            children: <CourseMaterialsTab scheduleId={scheduleId as string} />,
-          },
-          {
-            key: "submissions",
-            label: "Submissions",
-            children: <SubmissionsTab scheduleId={scheduleId as string} />,
-          },
-          {
-            key: "attendance",
-            label: "Attendance",
-            children: (
-              <AttendanceTab
-                scheduleId={scheduleId as string}
-                schedule={data}
-              />
-            ),
-          },
-          {
-            key: "grades",
-            label: "Grades",
-            children: <div>Coming Soon...</div>,
-          },
+          ...(showMaterials
+            ? [
+                {
+                  key: "course-material",
+                  label: "Course Material",
+                  children: (
+                    <CourseMaterialsTab scheduleId={scheduleId as string} />
+                  ),
+                },
+              ]
+            : []),
+          ...(showSubmissions
+            ? [
+                {
+                  key: "submission",
+                  label: "Submissions",
+                  children: (
+                    <SubmissionsTab scheduleId={scheduleId as string} />
+                  ),
+                },
+              ]
+            : []),
+          ...(showAttendance
+            ? [
+                {
+                  key: "attendance",
+                  label: "Attendance",
+                  children: (
+                    <AttendanceTab
+                      scheduleId={scheduleId as string}
+                      schedule={data}
+                    />
+                  ),
+                },
+              ]
+            : []),
+          ...(showGrades
+            ? [
+                {
+                  key: "grade",
+                  label: "Grades",
+                  children: <div>Coming Soon...</div>,
+                },
+              ]
+            : []),
         ]}
       />
     </div>

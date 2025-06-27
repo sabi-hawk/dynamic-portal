@@ -7,6 +7,7 @@ import Submission from "./submission/Submissions";
 import Graded from "./graded/Graded";
 import Attendance from "./attendance/Attendance";
 import Materials from "./materials/Materials";
+import { useHasFeature } from "utils/config";
 
 interface CourseData {
   _id: string;
@@ -22,6 +23,12 @@ function CourseDetail() {
   const { courseId } = useParams();
   const [course, setCourse] = useState<CourseData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // feature toggles
+  const showSubmission = useHasFeature("studentPortal", "submission");
+  const showGrade = useHasFeature("studentPortal", "grade");
+  const showAttendance = useHasFeature("studentPortal", "attendance");
+  const showMaterials = useHasFeature("studentPortal", "course-material");
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -74,28 +81,54 @@ function CourseDetail() {
         {course.courseName} ({course.courseCode}) – Section {course.section}
       </h2>
       <Tabs
-        defaultActiveKey="submission"
+        defaultActiveKey={
+          showSubmission
+            ? "submission"
+            : showGrade
+            ? "grade"
+            : showAttendance
+            ? "attendance"
+            : showMaterials
+            ? "course-material"
+            : undefined
+        }
         items={[
-          {
-            key: "submission",
-            label: "Submission",
-            children: <Submission />,
-          },
-          {
-            key: "graded",
-            label: "Graded",
-            children: <Graded />,
-          },
-          {
-            key: "attendance",
-            label: "Attendance",
-            children: <Attendance />,
-          },
-          {
-            key: "materials",
-            label: "Course Materials",
-            children: <Materials />,
-          },
+          ...(showSubmission
+            ? [
+                {
+                  key: "submission",
+                  label: "Submission",
+                  children: <Submission />,
+                },
+              ]
+            : []),
+          ...(showGrade
+            ? [
+                {
+                  key: "grade",
+                  label: "Graded",
+                  children: <Graded />,
+                },
+              ]
+            : []),
+          ...(showAttendance
+            ? [
+                {
+                  key: "attendance",
+                  label: "Attendance",
+                  children: <Attendance />,
+                },
+              ]
+            : []),
+          ...(showMaterials
+            ? [
+                {
+                  key: "course-material",
+                  label: "Course Materials",
+                  children: <Materials />,
+                },
+              ]
+            : []),
         ]}
       />
     </div>

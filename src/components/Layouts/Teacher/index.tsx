@@ -3,7 +3,11 @@ import { Col, Row, Button, Menu } from "antd";
 import React, { ReactNode, useEffect, useState } from "react";
 // import Image from "next/image";
 // import { usePathname } from "next/navigation";
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 // import Link from "next/link";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -110,19 +114,19 @@ const items: MenuItem[] = [
     ),
     label: <a href="/teacher/announcements">Announcements</a>,
   },
-  {
-    key: "settings",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/settings.svg"
-        alt="Settings Icon"
-      />
-    ),
-    label: <a href="/teacher/settings">Settings</a>,
-  },
+  // {
+  //   key: "settings",
+  //   icon: (
+  //     <img
+  //       className="w-[13px] h-[13px]"
+  //       height={13}
+  //       width={13}
+  //       src="/assets/icons/settings.svg"
+  //       alt="Settings Icon"
+  //     />
+  //   ),
+  //   label: <a href="/teacher/settings">Settings</a>,
+  // },
 ];
 
 function TeacherLayout({ children }: LayoutProps) {

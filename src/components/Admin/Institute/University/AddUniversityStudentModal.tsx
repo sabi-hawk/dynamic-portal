@@ -174,10 +174,7 @@ function AddUniversityStudentModal({
               <Select
                 placeholder="Select Program"
                 onChange={(val) => setProgram(val)}
-                options={[
-                  { value: "Bachelors", label: "Bachelors" },
-                  { value: "Masters", label: "Masters" },
-                ]}
+                options={[{ value: "Bachelors", label: "Bachelors" }]}
               />
             </Form.Item>
           </Col>

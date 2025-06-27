@@ -118,9 +118,12 @@ function Dashboard() {
           courses: calculatePerformance(coursesRes.data, lastMonthCourses),
         });
 
-        // Process student survey data
-        const studentSurveyData = processStudentSurveyData(studentsRes.data);
-        setStudentSurveyData(studentSurveyData);
+        // Process student survey data + breakdown
+        const { chartData, breakdown } = processStudentSurveyData(
+          studentsRes.data
+        );
+        setStudentSurveyData(chartData);
+        setStudentBreakdown(breakdown);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -132,6 +135,10 @@ function Dashboard() {
   }, []);
 
   const [studentSurveyData, setStudentSurveyData] = useState<any[]>([]);
+  const [studentBreakdown, setStudentBreakdown] = useState({
+    newCount: 0,
+    oldCount: 0,
+  });
 
   const processStudentSurveyData = (students: any[]) => {
     // Group students by admission month
@@ -156,13 +163,26 @@ function Dashboard() {
       return acc;
     }, {});
 
-    // Convert to array format for the chart
-    return Object.entries(monthlyData).flatMap(
+    const chartData = Object.entries(monthlyData).flatMap(
       ([month, data]: [string, any]) => [
         { name: "New Student", month, value: data.new },
         { name: "Old Student", month, value: data.old },
       ]
     );
+
+    const totals = (Object.values(monthlyData) as any).reduce(
+      (acc: any, curr: any) => {
+        acc.new += curr.new;
+        acc.old += curr.old;
+        return acc;
+      },
+      { new: 0, old: 0 }
+    );
+
+    return {
+      chartData,
+      breakdown: { newCount: totals.new, oldCount: totals.old },
+    };
   };
 
   const students_performance_config = {
@@ -344,7 +364,7 @@ function Dashboard() {
                   Fee Collected
                 </h3>
                 <h2 className="font-roboto text-xl font-medium leading-[28.13px] text-right text-[#4CAF50]">
-                  $64,566
+                  $
                 </h2>
               </div>
             </div>
@@ -356,7 +376,7 @@ function Dashboard() {
                 width={12}
                 alt="Arrow Up Icon"
               />
-              <p>10% Higher Then Last Month</p>
+              <p>Future Enhancement Coming Soon</p>
             </div>
           </div>
         </Col>
@@ -371,13 +391,35 @@ function Dashboard() {
           </Row>
         </Col>
         <Col span={12}>
+          <Row className="flex flex-col bg-white p-5 rounded-lg gap-4 min-h-[410px]">
+            <h3 className="font-roboto text-[17px] font-medium leading-[19.92px]">
+              Student Overview (Last 6 Months)
+            </h3>
+            <div className="flex justify-around items-center w-full mt-32">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-[#2989FF]">
+                  {studentBreakdown.newCount}
+                </h2>
+                <p className="text-sm">New Students</p>
+              </div>
+              <div className="h-12 w-px bg-gray-200" />
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-[#22CBCC]">
+                  {studentBreakdown.oldCount}
+                </h2>
+                <p className="text-sm">Existing Students</p>
+              </div>
+            </div>
+          </Row>
+        </Col>
+        {/* <Col span={12}>
           <Row className="flex flex-col bg-white p-5 rounded-lg">
             <h3 className="font-roboto text-[17px] font-medium leading-[19.92px]">
               Students Performance Survey
             </h3>
             <Column {...students_performance_config} />
           </Row>
-        </Col>
+        </Col> */}
       </Row>
       <Row gutter={16}>
         <Col span={12}>

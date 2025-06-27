@@ -101,6 +101,7 @@ const Students = () => {
   const messageApi = useMessageApi();
   const { settings } = useAppState();
   const instituteType = settings.portalSettings?.instituteType?.toLowerCase();
+  const [search, setSearch] = useState("");
 
   const fetchStudents = useCallback(async () => {
     try {
@@ -199,6 +200,17 @@ const Students = () => {
     },
   ];
 
+  const filteredStudents = students.filter((s) => {
+    const term = search.toLowerCase();
+    return (
+      s.rollNo?.toString().includes(term) ||
+      `${s.name?.first || ""} ${s.name?.last || ""}`
+        .toLowerCase()
+        .includes(term) ||
+      (s.email || "").toLowerCase().includes(term)
+    );
+  });
+
   return (
     <div>
       <div>
@@ -211,6 +223,9 @@ const Students = () => {
               className="w-[215px] bg-white rounded-[6px]"
               addonBefore={<SearchOutlined style={{ color: "#0000008A" }} />}
               placeholder="Search"
+              allowClear
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className="flex gap-[10px]">
@@ -267,7 +282,7 @@ const Students = () => {
         <Table<DataType>
           rowSelection={{ type: "checkbox", columnWidth: "50px" }}
           columns={actionColumns}
-          dataSource={students}
+          dataSource={filteredStudents}
           loading={loading}
           pagination={{
             position: ["bottomLeft"],

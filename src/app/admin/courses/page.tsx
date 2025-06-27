@@ -33,6 +33,7 @@ function Courses() {
   const [editMode, setEditMode] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
   const messageApi = useMessageApi();
+  const [search, setSearch] = useState("");
 
   const fetchCourses = useCallback(async () => {
     try {
@@ -156,6 +157,15 @@ function Courses() {
     },
   ];
 
+  const filteredCourses = courses.filter((c) => {
+    const term = search.toLowerCase();
+    return (
+      c.courseCode.toLowerCase().includes(term) ||
+      c.courseName.toLowerCase().includes(term) ||
+      (c.description || "").toLowerCase().includes(term)
+    );
+  });
+
   return (
     <div>
       <div className="flex justify-between p-[20px] bg-[#DAE1F3]">
@@ -167,6 +177,9 @@ function Courses() {
             className="w-[215px] bg-white rounded-[6px]"
             addonBefore={<SearchOutlined style={{ color: "#0000008A" }} />}
             placeholder="Search"
+            allowClear
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className="flex gap-[10px]">
@@ -211,7 +224,7 @@ function Courses() {
       <Table<CourseType>
         rowSelection={{ type: "checkbox", columnWidth: "50px" }}
         columns={columns}
-        dataSource={courses}
+        dataSource={filteredCourses}
         loading={loading}
         rowKey="_id"
         pagination={{

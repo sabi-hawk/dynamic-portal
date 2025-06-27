@@ -3,7 +3,7 @@ import React from "react";
 import { Row, Tabs } from "antd";
 import GeneralSettings from "components/Forms/Settings/General";
 import PortalSettings from "components/Forms/Settings/Portal";
-import "./index.scss"
+import "./index.scss";
 
 const onChange = (key: string) => {
   console.log(key);
@@ -24,11 +24,6 @@ function Settings() {
           type="card"
           size="large"
           items={[
-            {
-              label: `General`,
-              key: "1",
-              children: <GeneralSettings />,
-            },
             {
               label: `Portal`,
               key: "2",

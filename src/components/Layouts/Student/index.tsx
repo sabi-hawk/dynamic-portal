@@ -85,19 +85,19 @@ const items: MenuItem[] = [
     ),
     label: <a href="/student/leaves">Leaves</a>,
   },
-  {
-    key: "settings",
-    icon: (
-      <img
-        className="w-[13px] h-[13px]"
-        height={13}
-        width={13}
-        src="/assets/icons/settings.svg"
-        alt="Settings Icon"
-      />
-    ),
-    label: <a href="/student/settings">Settings</a>,
-  },
+  // {
+  //   key: "settings",
+  //   icon: (
+  //     <img
+  //       className="w-[13px] h-[13px]"
+  //       height={13}
+  //       width={13}
+  //       src="/assets/icons/settings.svg"
+  //       alt="Settings Icon"
+  //     />
+  //   ),
+  //   label: <a href="/student/settings">Settings</a>,
+  // },
   {
     key: "announcements",
     icon: (

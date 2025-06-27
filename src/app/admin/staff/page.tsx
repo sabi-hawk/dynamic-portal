@@ -42,6 +42,7 @@ const Staff = () => {
   });
   const [total, setTotal] = useState(0);
   const messageApi = useMessageApi();
+  const [search, setSearch] = useState("");
 
   const fetchTeachers = useCallback(async () => {
     try {
@@ -209,6 +210,20 @@ const Staff = () => {
     },
   ];
 
+  const filteredStaff = teachers.filter((t: any) => {
+    const term = search.toLowerCase();
+    return (
+      `${t.name?.first || ""} ${t.name?.last || ""}`
+        .toLowerCase()
+        .includes(term) ||
+      (t.name?.first || "").toLowerCase().includes(term) ||
+      (t.name?.last || "").toLowerCase().includes(term) ||
+      (t.email || "").toLowerCase().includes(term) ||
+      (t.department || "").toLowerCase().includes(term) ||
+      (t.role || "").toLowerCase().includes(term)
+    );
+  });
+
   return (
     <div>
       <div>
@@ -221,6 +236,9 @@ const Staff = () => {
               className="w-[215px] bg-white rounded-[6px]"
               addonBefore={<SearchOutlined style={{ color: "#0000008A" }} />}
               placeholder="Search"
+              allowClear
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className="flex gap-[10px]">
@@ -277,7 +295,7 @@ const Staff = () => {
         <Table<DataType>
           rowSelection={{ type: "checkbox", columnWidth: "50px" }}
           columns={columns}
-          dataSource={teachers}
+          dataSource={filteredStaff}
           loading={loading}
           pagination={{
             position: ["bottomLeft"],

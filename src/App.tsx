@@ -11,7 +11,7 @@ import Students from "app/admin/students/page";
 import Courses from "app/admin/courses/page";
 import Staff from "app/admin/staff/page";
 import CashFlows from "app/admin/cash-flows/page";
-import Attendance from "app/admin/attendance/page";
+// import Attendance from "app/admin/attendance/page";
 import Settings from "app/admin/settings/page";
 import AdminLayout from "components/Layouts/Admin";
 
@@ -23,7 +23,7 @@ import TeacherLeaves from "app/teacher/leaves/page";
 import TeacherTimeTable from "app/teacher/time-table/page";
 import TeacherProfile from "app/teacher/profile/page";
 import CourseDetail from "app/teacher/course/detail";
-import TeacherSettings from "app/teacher/settings/page";
+// import TeacherSettings from "app/teacher/settings/page";
 import TeacherLayout from "components/Layouts/Teacher";
 
 // Student routes
@@ -35,7 +35,7 @@ import StudentCourses from "app/student/courses/page";
 import StudentCourseDetail from "app/student/course/[courseId]/page";
 import StudentAttendance from "app/student/attendance/page";
 import StudentGrade from "app/student/grade/page";
-import StudentSettings from "app/student/settings/page";
+// import StudentSettings from "app/student/settings/page";
 import StudentLayout from "components/Layouts/Student";
 import React from "react";
 import NotFound from "app/NotFound";
@@ -48,10 +48,10 @@ const roleRoutes = {
     { path: "dashboard", component: AdminDashboard },
     { path: "teachers", component: Teachers },
     { path: "students", component: Students },
-    { path: "courses", component: Courses },  
+    { path: "courses", component: Courses },
     { path: "staff", component: Staff },
     { path: "cash-flows", component: CashFlows },
-    { path: "attendance", component: Attendance },
+    // { path: "attendance", component: Attendance },
     { path: "settings", component: Settings },
     { path: "announcements", component: AdminAnnouncements },
   ],
@@ -63,7 +63,7 @@ const roleRoutes = {
     { path: "leaves", component: TeacherLeaves },
     { path: "time-table", component: TeacherTimeTable },
     { path: "profile", component: TeacherProfile },
-    { path: "settings", component: TeacherSettings },
+    // { path: "settings", component: TeacherSettings },
     { path: "announcements", component: TeacherAnnouncements },
   ],
   student: [
@@ -75,7 +75,7 @@ const roleRoutes = {
     { path: "attendance", component: StudentAttendance },
     { path: "grade", component: StudentGrade },
     { path: "leaves", component: StudentLeaves },
-    { path: "settings", component: StudentSettings },
+    // { path: "settings", component: StudentSettings },
     { path: "announcements", component: StudentAnnouncements },
   ],
 };
@@ -114,7 +114,7 @@ const App = () => {
               )
             }
           />
-          
+
           {routes.map(({ path, component }) => (
             <Route
               key={path}

@@ -133,6 +133,16 @@ const data = Array.from({ length: 100 }).map<DataType>((_, i) => ({
   section: "A",
 }));
 
+function filterTeachers(list: DataType[], term: string) {
+  const t = term.toLowerCase();
+  return list.filter(
+    (item) =>
+      item.name.toLowerCase().includes(t) ||
+      item.email?.toLowerCase().includes(t) ||
+      item.department?.toLowerCase().includes(t)
+  );
+}
+
 const handleEdit = (key: React.Key) => {
   console.log("Edit record", key);
 };
@@ -143,6 +153,7 @@ const handleDelete = (key: React.Key) => {
 
 function Teachers() {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const showModal = () => {
     setOpen(true);
   };
@@ -159,6 +170,9 @@ function Teachers() {
               className="w-[215px] bg-white rounded-[6px]"
               addonBefore={<SearchOutlined style={{ color: "#0000008A" }} />}
               placeholder="Search"
+              allowClear
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className="flex gap-[10px]">
@@ -215,7 +229,7 @@ function Teachers() {
         <Table<DataType>
           rowSelection={{ type: "checkbox", columnWidth: "50px" }}
           columns={columns}
-          dataSource={data}
+          dataSource={filterTeachers(data, search)}
           // scroll={{ y: "100%" }}
           pagination={{
             position: ["bottomLeft"],

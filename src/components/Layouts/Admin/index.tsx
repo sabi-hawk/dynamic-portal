@@ -99,19 +99,19 @@ function AdminLayout({ children }: LayoutProps) {
         icon: <DollarOutlined />,
         label: "Cash Flows",
       },
-      {
-        key: "attendance",
-        icon: (
-          <img
-            className="w-[13px] h-[13px]"
-            height={13}
-            width={13}
-            src="/assets/icons/teachers.svg"
-            alt="Attendance Icon"
-          />
-        ),
-        label: "Attendance",
-      },
+      // {
+      //   key: "attendance",
+      //   icon: (
+      //     <img
+      //       className="w-[13px] h-[13px]"
+      //       height={13}
+      //       width={13}
+      //       src="/assets/icons/teachers.svg"
+      //       alt="Attendance Icon"
+      //     />
+      //   ),
+      //   label: "Attendance",
+      // },
       {
         key: "settings",
         icon: <SettingOutlined />,

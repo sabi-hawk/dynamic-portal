@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Select, TimePicker, Button, Space, Row, Col } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import type { Dayjs } from "dayjs";
@@ -17,6 +17,9 @@ const CourseScheduleField: React.FC<CourseScheduleFieldProps> = ({
   instructors,
   sections,
 }) => {
+  const form = Form.useFormInstance();
+  const [start, setStart] = useState<Dayjs | null>(null);
+
   const daysOfWeek = [
     "Monday",
     "Tuesday",
@@ -66,7 +69,18 @@ const CourseScheduleField: React.FC<CourseScheduleFieldProps> = ({
             label="Start Time"
             rules={[{ required: true, message: "Please select start time" }]}
           >
-            <TimePicker format="HH:mm" />
+            <TimePicker
+              format="HH:mm"
+              onChange={(value) => {
+                setStart(value);
+                if (value) {
+                  const proposedEnd = value.add(1, "hour");
+                  form.setFieldValue([name, "endTime"], proposedEnd);
+                } else {
+                  form.setFieldValue([name, "endTime"], null);
+                }
+              }}
+            />
           </Form.Item>
         </Col>
         <Col span={6}>
@@ -75,7 +89,28 @@ const CourseScheduleField: React.FC<CourseScheduleFieldProps> = ({
             label="End Time"
             rules={[{ required: true, message: "Please select end time" }]}
           >
-            <TimePicker format="HH:mm" />
+            <TimePicker
+              format="HH:mm"
+              disabledTime={() => {
+                if (!start) return {};
+                const startHour = start.hour();
+                const startMinute = start.minute();
+                return {
+                  disabledHours: () =>
+                    Array.from({ length: 24 }, (_, i) => i).filter(
+                      (h) => h < startHour
+                    ),
+                  disabledMinutes: (selectedHour: number) => {
+                    if (selectedHour === startHour) {
+                      return Array.from({ length: 60 }, (_, i) => i).filter(
+                        (m) => m < startMinute
+                      );
+                    }
+                    return [];
+                  },
+                };
+              }}
+            />
           </Form.Item>
         </Col>
       </Row>
