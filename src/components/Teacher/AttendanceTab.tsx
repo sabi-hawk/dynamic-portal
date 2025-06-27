@@ -32,13 +32,31 @@ function AttendanceTab({ scheduleId, schedule }: Props) {
   const today = current.format("YYYY-MM-DD");
 
   const slotLabel = () => {
-    // assume hourly slots
-    const start = dayjs(today + " " + schedule.schedule.startTime);
-    const diff = current.diff(start, "hour");
-    if (diff < 0) return null;
-    const slotStart = start.add(diff, "hour");
+    // Make sure today is one of the lecture's days
+    const todayName = current.format("dddd"); // Monday, Tuesday, ...
+    if (!schedule.schedule.daysOfWeek?.includes(todayName)) {
+      return null;
+    }
+
+    // Build moment objects for lecture start & end today (using 24-h time strings)
+    const lectureStart = dayjs(`${today} ${schedule.schedule.startTime}`);
+    const lectureEnd = dayjs(`${today} ${schedule.schedule.endTime}`);
+
+    // Current time must be >= start and < end
+    if (current.isBefore(lectureStart) || !current.isBefore(lectureEnd)) {
+      return null;
+    }
+
+    // Determine the hourly slot the current time falls into
+    const diffHours = Math.floor(current.diff(lectureStart, "hour"));
+    const slotStart = lectureStart.add(diffHours, "hour");
     const slotEnd = slotStart.add(1, "hour");
-    if (current.isAfter(slotEnd)) return null;
+
+    // Ensure this slotEnd does not exceed lectureEnd (handles non-exact hour durations)
+    if (slotEnd.isAfter(lectureEnd)) {
+      return null;
+    }
+
     return `${slotStart.format("HH:mm")}-${slotEnd.format("HH:mm")}`;
   };
   const activeSlot = slotLabel();

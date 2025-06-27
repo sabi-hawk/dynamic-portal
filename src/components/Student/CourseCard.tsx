@@ -12,11 +12,13 @@ interface Course {
 }
 
 interface CourseCardProps {
-  data: Course;
+  data: any; // allow schedule object or course
+  hideDetails?: boolean;
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
-  const { courseCode, courseName, description, status, section } = data;
+const CourseCard: React.FC<CourseCardProps> = ({ data, hideDetails }) => {
+  const courseMeta = data.course ? data.course : data;
+  const { courseCode, courseName, description, status, section } = courseMeta;
 
   const renderStatusTag = () => {
     return (
@@ -37,9 +39,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
         <div className="flex justify-between items-center">
           <div>
             <span className="text-[#2989FF] font-semibold mr-2">
-              {courseCode}
+              {courseMeta.courseCode || ""}
             </span>
-            <span className="font-medium">{courseName}</span>
+            <span className="font-medium">{courseMeta.courseName || ""}</span>
           </div>
           {renderStatusTag()}
         </div>
@@ -54,9 +56,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
           Section: <span className="font-medium">{section}</span>
         </div>
         <div className="text-sm text-gray-600 line-clamp-2">{description}</div>
-        <Button type="link" className="p-0 mt-2">
-          View Details
-        </Button>
+        {!hideDetails && (
+          <Button type="link" className="p-0 mt-2">
+            View Details
+          </Button>
+        )}
       </div>
     </Card>
   );

@@ -1,7 +1,11 @@
 "use client";
 import { Col, Row, Button, Menu } from "antd";
 import React, { ReactNode, useEffect, useState } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -115,7 +119,10 @@ function StudentLayout({ children }: LayoutProps) {
   const [selectedKey, setSelectedKey] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { settings } = useAppState();
+  const {
+    auth: { user },
+    settings,
+  } = useAppState();
   const studentFeatures =
     settings.portalSettings?.portalPermissions?.studentPortal?.features || [];
 
@@ -235,7 +242,9 @@ function StudentLayout({ children }: LayoutProps) {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <div>
-            <span className="mr-2.5">Username</span>
+            <span className="mr-2.5">
+              {user?.name?.first} {user?.name?.last}
+            </span>
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         </Row>

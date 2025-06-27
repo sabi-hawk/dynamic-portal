@@ -88,10 +88,10 @@ export default function StudentLeavesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => (
             <div key={course._id} className="relative group">
-              <CourseCard data={course as any} />
+              <CourseCard data={course as any} hideDetails />
               <Button
                 type="primary"
-                className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition"
+                className="absolute bottom-4 right-4"
                 onClick={() => openModal(course)}
               >
                 Request Leave
