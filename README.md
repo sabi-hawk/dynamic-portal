@@ -1,46 +1,172 @@
-# Getting Started with Create React App
+# Dynamic Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dynamic Portal is a **full-stack web application** built with a modern TypeScript stack:
 
-## Available Scripts
+- **Frontend** – React 18, Vite, Ant Design 5, Redux Toolkit, React-Query, Tailwind CSS
+- **Backend** – Node.js, Express, TypeScript, MongoDB, Socket.IO, JWT auth
 
-In the project directory, you can run:
+The project is split into two repositories that live side-by-side on your machine:
 
-### `npm start`
+| Layer    | Git URL                                                   | Local folder              |
+| -------- | --------------------------------------------------------- | ------------------------- |
+| Frontend | `https://github.com/sabi-hawk/dynamic-portal.git`         | `dynamic-portal/`         |
+| Backend  | `https://github.com/sabi-hawk/dynamic-portal-backend.git` | `dynamic-portal-backend/` |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 1. Prerequisites
 
-### `npm test`
+1. **Node.js ≥ 18** (check with `node -v`)
+2. **npm ≥ 9** (comes with Node – check with `npm -v`)
+3. **MongoDB** running locally or a connection string to a remote cluster
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+> 📦 Both workspaces use plain npm – you don’t need Yarn or PNPM unless you prefer them.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 2. Clone the repositories
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# ① Clone the frontend
+git clone https://github.com/sabi-hawk/dynamic-portal.git
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# ② Clone the backend (sibling folder)
+git clone https://github.com/sabi-hawk/dynamic-portal-backend.git
+```
 
-### `npm run eject`
+Your directory tree should now look like this:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+📂 your-workspace/
+ ├─ dynamic-portal/            # React frontend
+ └─ dynamic-portal-backend/    # Express backend
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 3. Install dependencies
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+# Frontend deps
+cd dynamic-portal
+npm install
 
-## Learn More
+# Backend deps
+cd ../dynamic-portal-backend
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 4. Configure environment variables
+
+### 4.1 Backend
+
+Create a `.env` file inside `dynamic-portal-backend/` (there is an example in the repo). Minimum required keys:
+
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/dynamic-portal
+JWT_SECRET=super-secret-string
+```
+
+### 4.2 Frontend
+
+If the frontend needs to know the API base URL you can add a `.env` file in `dynamic-portal/`:
+
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
+> ⚠️ Every variable **must start with `REACT_APP_`** so that Create React App can expose it to the browser.
+
+---
+
+## 5. Running in development
+
+Open **two terminal tabs** – one for each layer.
+
+### 5.1 Backend
+
+```bash
+cd dynamic-portal-backend
+npm run dev:server           # nodemon + ts-node (default port 5000)
+```
+
+### 5.2 Frontend
+
+```bash
+cd dynamic-portal
+npm start                    # CRA dev-server on port 3000
+```
+
+Now visit <http://localhost:3000> – the React app will proxy API requests to <http://localhost:5000>.
+
+---
+
+### 5.3 Optional: run both with `concurrently`
+
+Install globally (or add to one repo):
+
+```bash
+npm install -g concurrently
+```
+
+Then from the project root you can run:
+
+```bash
+concurrently "npm --prefix dynamic-portal-backend run dev:server" "npm --prefix dynamic-portal start"
+```
+
+---
+
+## 6. Production build
+
+```bash
+# Build optimised static assets
+cd dynamic-portal
+npm run build                # output ⇒ build/
+```
+
+Serve the generated `build/` folder with **NGINX**, **serve**, or any static hosting of your choice.  
+Make sure the backend is reachable under the same domain or adjust `REACT_APP_API_URL` accordingly.
+
+---
+
+## 7. Project scripts reference
+
+| Location                  | Script               | Purpose                              |
+| ------------------------- | -------------------- | ------------------------------------ |
+| `dynamic-portal/`         | `npm start`          | Launch CRA dev server (hot-reload)   |
+|                           | `npm run build`      | Bundle React for production          |
+|                           | `npm test`           | Jest test runner                     |
+| `dynamic-portal-backend/` | `npm run dev:server` | Nodemon + ts-node live-reload server |
+
+|
+
+---
+
+## 8. Tech stack details
+
+- **React 18 + TypeScript** – component based UI
+- **Ant Design 5** – ready-made UI widgets and charts
+- **Redux Toolkit & React-Query** – state management & server cache
+- **Tailwind CSS** – utility-first styling
+- **Express.js** – REST API, Socket.IO realtime channels
+- **MongoDB & Mongoose** – document database layer
+- **JWT + Bcrypt** – authentication & password hashing
+- **Winston** – centralised logging
+
+---
+
+## 9. Troubleshooting
+
+- "EADDRINUSE" – Something else is already running on the expected port. Change `PORT` or kill the process.
+- CORS errors – Ensure the backend sends correct `Access-Control-Allow-Origin` headers. They are enabled via the `cors` package.
+- TypeScript type errors – run `npm run build` or `tsc --noEmit` to get a full report.
+
+---
+
+## 10. License
+
+This project is licensed under the MIT License – see the `LICENSE` file for details.

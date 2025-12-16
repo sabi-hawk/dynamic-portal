@@ -78,4 +78,5 @@ API.interceptors.response.use(
 //     }
 //   }
 // );
+export const axiosInstance = API;
 export default API;

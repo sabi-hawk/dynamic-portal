@@ -41,6 +41,8 @@ function AdminLayout({ children }: LayoutProps) {
 
   // Create menu items with conditional rendering based on portal settings
   const getMenuItems = useCallback((): MenuItem[] => {
+    const isSchool = settings.portalSettings?.instituteType === "school";
+
     const menuData = [
       {
         key: "dashboard",
@@ -69,17 +71,17 @@ function AdminLayout({ children }: LayoutProps) {
         label: "Students",
       },
       {
-        key: "courses",
+        key: isSchool ? "classes" : "courses",
         icon: (
           <img
             className="w-[11.24px] h-[13px]"
             height={13}
             width={13}
             src="/assets/icons/courses.svg"
-            alt="Courses Icon"
+            alt={isSchool ? "Classes Icon" : "Courses Icon"}
           />
         ),
-        label: "Courses",
+        label: isSchool ? "Classes" : "Courses",
       },
       {
         key: "staff",
@@ -162,7 +164,7 @@ function AdminLayout({ children }: LayoutProps) {
         ),
       };
     });
-  }, [isPortalConfigured]);
+  }, [isPortalConfigured, settings.portalSettings?.instituteType]);
 
   useEffect(() => {
     // Check for window to ensure this runs only on the client side

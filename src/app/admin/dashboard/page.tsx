@@ -5,7 +5,9 @@ import React, { useEffect, useState } from "react";
 import { Column } from "@ant-design/plots";
 import { getStudents } from "../../../api/student";
 import { getCourses } from "../../../api/course";
+import { getClasses } from "../../../api/class";
 import { getTeachers } from "api/teacher";
+import { useAppState } from "hooks";
 
 interface DataType {
   key: string;
@@ -37,6 +39,8 @@ const columns: TableProps<DataType>["columns"] = [
 ];
 
 function Dashboard() {
+  const { settings } = useAppState();
+  const isSchool = settings.portalSettings?.instituteType === "school";
   const [students, setStudents] = useState<any[]>([]);
   const [teachers, setTeachers] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([]);
@@ -50,11 +54,29 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [studentsRes, teachersRes, coursesRes] = await Promise.all([
-          getStudents(),
-          getTeachers(),
-          getCourses(),
-        ]);
+        let studentsRes, teachersRes, coursesOrClassesData;
+
+        if (isSchool) {
+          const [students, teachers, classes] = await Promise.all([
+            getStudents(),
+            getTeachers(),
+            getClasses(),
+          ]);
+          studentsRes = students;
+          teachersRes = teachers;
+          // getClasses() returns array directly
+          coursesOrClassesData = classes;
+        } else {
+          const [students, teachers, courses] = await Promise.all([
+            getStudents(),
+            getTeachers(),
+            getCourses(),
+          ]);
+          studentsRes = students;
+          teachersRes = teachers;
+          // getCourses() returns { data: [...] }
+          coursesOrClassesData = courses.data || [];
+        }
 
         // Get top 5 newest students
         const newestStudents = studentsRes.data
@@ -78,7 +100,7 @@ function Dashboard() {
 
         setStudents(newestStudents);
         setTeachers(newestTeachers);
-        setCourses(coursesRes.data);
+        setCourses(coursesOrClassesData);
 
         // Calculate performance statistics
         const calculatePerformance = (
@@ -107,15 +129,15 @@ function Dashboard() {
           0,
           Math.floor(teachersRes.data.length * 0.9)
         );
-        const lastMonthCourses = coursesRes.data.slice(
+        const lastMonthCourses = coursesOrClassesData.slice(
           0,
-          Math.floor(coursesRes.data.length * 0.9)
+          Math.floor(coursesOrClassesData.length * 0.9)
         );
 
         setPerformanceStats({
           students: calculatePerformance(studentsRes.data, lastMonthStudents),
           teachers: calculatePerformance(teachersRes.data, lastMonthTeachers),
-          courses: calculatePerformance(coursesRes.data, lastMonthCourses),
+          courses: calculatePerformance(coursesOrClassesData, lastMonthCourses),
         });
 
         // Process student survey data + breakdown
@@ -132,7 +154,7 @@ function Dashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [isSchool]);
 
   const [studentSurveyData, setStudentSurveyData] = useState<any[]>([]);
   const [studentBreakdown, setStudentBreakdown] = useState({
@@ -285,7 +307,7 @@ function Dashboard() {
               />
               <div className="flex flex-col items-end">
                 <h3 className="font-roboto text-base font-medium leading-[18.75px] text-left">
-                  Total Courses
+                  Total {isSchool ? "Classes" : "Courses"}
                 </h3>
                 <h2 className="font-roboto text-xl font-medium leading-[28.13px] text-right text-[#4CAF50]">
                   {performanceStats.courses.count}

@@ -9,6 +9,7 @@ import AdminDashboard from "app/admin/dashboard/page";
 import Teachers from "app/admin/teachers/page";
 import Students from "app/admin/students/page";
 import Courses from "app/admin/courses/page";
+import Classes from "app/admin/classes/page";
 import Staff from "app/admin/staff/page";
 import CashFlows from "app/admin/cash-flows/page";
 // import Attendance from "app/admin/attendance/page";
@@ -49,6 +50,7 @@ const roleRoutes = {
     { path: "teachers", component: Teachers },
     { path: "students", component: Students },
     { path: "courses", component: Courses },
+    { path: "classes", component: Classes },
     { path: "staff", component: Staff },
     { path: "cash-flows", component: CashFlows },
     // { path: "attendance", component: Attendance },

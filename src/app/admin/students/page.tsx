@@ -21,15 +21,21 @@ interface DataType {
   image: string;
   rollNo: number;
   name: { first: string; last: string };
+  fullName?: string;
   department?: string;
+  className?: string;
+  sectionName?: string;
   gender: string;
-  mobile: string;
-  email: string;
+  mobile?: string;
+  email?: string;
+  guardianName?: string;
+  guardianContact?: string;
   admissionDate: string;
-  section: string;
+  section?: string;
 }
 
-const columns: TableColumnsType<DataType> = [
+// University/College columns
+const universityColumns: TableColumnsType<DataType> = [
   {
     title: "Roll No.",
     dataIndex: "rollNo",
@@ -87,6 +93,73 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
+// School columns
+const schoolColumns: TableColumnsType<DataType> = [
+  {
+    title: "Roll No.",
+    dataIndex: "rollNo",
+  },
+  {
+    title: "Full Name",
+    dataIndex: "fullName",
+    render: (fullName: string, record) => (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img
+          src={record.image}
+          alt="Profile"
+          width={40}
+          height={40}
+          style={{ borderRadius: "50%", marginRight: "8px" }}
+        />
+        <span>
+          {fullName || `${record.name.first} ${record.name.last}`.trim()}
+        </span>
+      </div>
+    ),
+  },
+  {
+    title: "Class",
+    dataIndex: "className",
+    render: (className: string) => className || "N/A",
+  },
+  {
+    title: "Section",
+    dataIndex: "sectionName",
+    render: (sectionName: string) => sectionName || "N/A",
+  },
+  {
+    title: "Gender",
+    dataIndex: "gender",
+    render: (gender: string) => (
+      <Tag
+        className={`${
+          gender === "Male" || gender === "male"
+            ? "bg-[rgba(25,135,84,0.15)] text-[#198754] border border-[#27d081]"
+            : "bg-[rgba(111,66,193,0.15)] text-[#6F42C1] border border-[#9067dc]"
+        }`}
+      >
+        {gender}
+      </Tag>
+    ),
+  },
+  {
+    title: "Guardian Name",
+    dataIndex: "guardianName",
+    render: (guardianName: string) => guardianName || "N/A",
+  },
+  {
+    title: "Guardian Contact",
+    dataIndex: "guardianContact",
+    render: (guardianContact: string) => guardianContact || "N/A",
+  },
+  {
+    title: "Admission Date",
+    dataIndex: "admissionDate",
+    render: (date: string) =>
+      date ? new Date(date).toLocaleDateString() : "N/A",
+  },
+];
+
 const Students = () => {
   const [open, setOpen] = useState(false);
   const [students, setStudents] = useState<DataType[]>([]);
@@ -115,10 +188,15 @@ const Students = () => {
         name: student.name
           ? { first: student.name.first || "", last: student.name.last || "" }
           : { first: "", last: "" },
+        fullName: student.fullName || "",
         department: student.department,
+        className: student.classId?.className || "",
+        sectionName: student.sectionId?.sectionName || "",
         gender: student.gender,
         mobile: student.mobile,
         email: student.email,
+        guardianName: student.guardianName || "",
+        guardianContact: student.guardianContact || "",
         admissionDate: student.admissionDate,
         section: student.section,
       }));
@@ -166,8 +244,12 @@ const Students = () => {
     }
   };
 
+  // Select columns based on institute type
+  const baseColumns =
+    instituteType === "school" ? schoolColumns : universityColumns;
+
   const actionColumns: TableColumnsType<DataType> = [
-    ...columns.filter((col) => col.title !== "Actions"),
+    ...baseColumns.filter((col) => col.title !== "Actions"),
     {
       title: "Actions",
       dataIndex: "actions",
@@ -202,12 +284,24 @@ const Students = () => {
 
   const filteredStudents = students.filter((s) => {
     const term = search.toLowerCase();
+    const fullName =
+      s.fullName || `${s.name?.first || ""} ${s.name?.last || ""}`;
+
+    if (instituteType === "school") {
+      return (
+        s.rollNo?.toString().includes(term) ||
+        fullName.toLowerCase().includes(term) ||
+        (s.className || "").toLowerCase().includes(term) ||
+        (s.sectionName || "").toLowerCase().includes(term) ||
+        (s.guardianName || "").toLowerCase().includes(term)
+      );
+    }
+
     return (
       s.rollNo?.toString().includes(term) ||
-      `${s.name?.first || ""} ${s.name?.last || ""}`
-        .toLowerCase()
-        .includes(term) ||
-      (s.email || "").toLowerCase().includes(term)
+      fullName.toLowerCase().includes(term) ||
+      (s.email || "").toLowerCase().includes(term) ||
+      (s.department || "").toLowerCase().includes(term)
     );
   });
 
